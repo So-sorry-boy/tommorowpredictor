@@ -10,20 +10,22 @@
 
   <style>
     /* ------------------- Base & Body ------------------- */
-    body {
-      margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      text-align: center;
-      color: #eee;
-      min-height: 100vh;
-      display: flex;
-      flex-direction: column;
-      justify-content: center;
-      align-items: center;
-      padding: 20px;
-      overflow-x: hidden;
-      position: relative;
-    }
+ body {
+  margin: 0;
+  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+  text-align: center;
+  color: #ffffff; /* Text ko white rakho */
+  min-height: 100vh;
+  display: flex;
+  flex-direction: column;
+  justify-content: center;
+  align-items: center;
+  padding: 20px;
+  overflow-x: hidden;
+  position: relative;
+  background: #0a0a0a; /* Dark background */
+}
+
 
     canvas#bgCanvas {
       position: fixed;
@@ -165,15 +167,16 @@
     }
 
     /* ------------------- Footer ------------------- */
-    footer {
-      position: absolute;
-      bottom: 10px;
-      font-size: clamp(0.95rem, 2vw, 1.3rem);
-      font-family: 'Pacifico', cursive;
-      color: #ffffff;
-      letter-spacing: 1px;
-      animation: floaty 4s ease-in-out infinite alternate;
-    }
+footer {
+  position: absolute;
+  bottom: 10px;
+  font-size: clamp(0.9rem, 2vw, 1.2rem);
+  font-family: 'Playfair Display', serif;
+  color: #ffffff; /* White color for your name */
+  letter-spacing: 1px;
+  font-weight: 600; /* Slightly bolder */
+  animation: floaty 4s ease-in-out infinite alternate;
+}
 
     @keyframes floaty { 0%{transform:translateY(0);} 100%{transform:translateY(-6px);} }
 
