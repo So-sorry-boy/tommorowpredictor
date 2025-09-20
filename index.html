@@ -9,11 +9,12 @@
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
+    /* ------------------- Base & Body ------------------- */
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       text-align: center;
-      background: linear-gradient(135deg, #1a1523 0%, #3a227b 100%);
+      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
       color: #eee;
       min-height: 100vh;
       display: flex;
@@ -21,58 +22,60 @@
       justify-content: center;
       align-items: center;
       padding: 20px;
-      box-sizing: border-box;
       overflow-x: hidden;
     }
 
-    /* Title */
+    /* ------------------- Title ------------------- */
     h1 {
-      font-size: clamp(1.8rem, 5vw, 3rem);
-      margin-bottom: 20px;
-      color: #d1aaff;
+      font-size: clamp(2rem, 5vw, 3rem);
+      margin-bottom: 30px;
+      color: #b983ff;
       letter-spacing: 1px;
-      text-shadow: 0 0 8px #b983ff, 0 0 15px #7f53ac;
+      text-shadow: 0 0 8px #b983ff, 0 0 15px #7f53ac, 0 0 25px #7f53ac77;
     }
 
-    /* Card for inputs & progress */
+    /* ------------------- Card ------------------- */
     .card {
-      background: rgba(40, 20, 60, 0.5);
-      backdrop-filter: blur(12px);
+      background: rgba(0, 0, 0, 0.5);
+      backdrop-filter: blur(15px);
       border-radius: 25px;
-      padding: 30px 20px;
-      box-shadow: 0 8px 30px rgba(0,0,0,0.5);
+      padding: 30px 25px;
+      box-shadow: 0 8px 40px rgba(0,0,0,0.7);
       display: flex;
       flex-direction: column;
       align-items: center;
       width: 100%;
       max-width: 450px;
+      border: 1px solid rgba(185,131,255,0.3);
     }
 
+    /* ------------------- Labels & Inputs ------------------- */
     label {
       font-size: clamp(1rem, 2vw, 1.2rem);
       margin-bottom: 10px;
       color: #c3b1e1;
+      font-weight: 500;
     }
 
     select, button {
-      padding: 12px 20px;
-      font-size: clamp(0.9rem, 2vw, 1.1rem);
-      border-radius: 10px;
+      padding: 12px 22px;
+      font-size: clamp(0.95rem, 2vw, 1.15rem);
+      border-radius: 12px;
       border: none;
       margin: 10px 0;
       outline: none;
-      background: #231942;
+      background: #1a1a1a;
       color: #eee;
-      box-shadow: 0 4px 12px #0003;
-      transition: 0.3s;
+      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
+      transition: 0.3s ease;
     }
 
     select:focus {
-      box-shadow: 0 0 0 2px #b983ff99;
+      box-shadow: 0 0 10px #b983ff, 0 0 20px #7f53ac;
     }
 
     button {
-      background: linear-gradient(90deg, #7f53ac 0%, #657ced 100%);
+      background: linear-gradient(90deg, #7f53ac 0%, #b983ff 100%);
       cursor: pointer;
       font-weight: bold;
       letter-spacing: 0.5px;
@@ -80,8 +83,8 @@
 
     button:hover {
       background: linear-gradient(90deg, #b983ff 0%, #7f53ac 100%);
-      box-shadow: 0 6px 20px #7f53ac77;
-      transform: scale(1.03);
+      box-shadow: 0 0 20px #b983ff, 0 0 35px #7f53ac;
+      transform: scale(1.05);
     }
 
     button:active {
@@ -89,17 +92,16 @@
       box-shadow: 0 2px 10px #0005;
     }
 
-    /* Progress Bar */
+    /* ------------------- Progress Bar ------------------- */
     .progress-container {
       width: 90%;
       max-width: 400px;
-      background: rgba(100, 71, 133, 0.23);
-      border-radius: 20px;
+      background: rgba(185,131,255,0.15);
+      border-radius: 25px;
       overflow: hidden;
       margin-top: 20px;
       height: 22px;
       display: none;
-      box-shadow: 0 2px 10px #0003;
       position: relative;
     }
 
@@ -107,7 +109,7 @@
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, #b983ff, #7f53ac);
-      box-shadow: 0 0 10px #b983ff, 0 0 20px #7f53ac;
+      box-shadow: 0 0 15px #b983ff, 0 0 25px #7f53ac;
       animation: progressAnim 8s linear forwards;
       position: relative;
       overflow: hidden;
@@ -127,25 +129,25 @@
     @keyframes progressAnim { from { width:0%; } to { width:100%; } }
     @keyframes shine { 0% { left:-50%; } 100% { left:100%; } }
 
-    /* Funny Loading Text */
+    /* ------------------- Loading Text ------------------- */
     #loadingText {
       margin-top: 15px;
       font-size: clamp(0.95rem, 2.5vw, 1.2rem);
       font-style: italic;
       color: #b983ff;
       min-height: 28px;
-      transition: opacity 0.3s;
       opacity: 0;
+      transition: opacity 0.5s ease;
     }
 
-    /* Result */
+    /* ------------------- Result ------------------- */
     #result {
       margin-top: 25px;
       font-size: clamp(1.3rem, 3vw, 1.7rem);
       font-weight: bold;
       animation: fadeIn 0.8s ease-in;
       color: #ffe8fa;
-      text-shadow: 0 2px 12px #7f53ac88;
+      text-shadow: 0 2px 15px #7f53ac77, 0 0 25px #b983ff55;
     }
 
     @keyframes fadeIn {
@@ -153,7 +155,7 @@
       to { opacity:1; transform: translateY(0); }
     }
 
-    /* Footer */
+    /* ------------------- Footer ------------------- */
     footer {
       position: absolute;
       bottom: 10px;
@@ -166,6 +168,7 @@
 
     @keyframes floaty { 0%{transform:translateY(0);} 100%{transform:translateY(-6px);} }
 
+    /* ------------------- Responsive ------------------- */
     @media (max-width: 600px) {
       select, button { width: 90%; }
     }
@@ -201,76 +204,45 @@
 
   <script>
     const funnyLines = [
-      "Calibrating mood swings...","Negotiating with WiFi spirits...",
-      "Teaching calculator empathy...","Convincing gravity to stay...",
-      "Consulting with fortune cookies...","Spying on pigeons for intel...",
-      "Baking cookies in RAM...","Sending memes to NASA...",
-      "Counting the stars one by one...","Whispering secrets to USB ports...",
-      "Aligning planets for accuracy...","Hacking into grandma’s knitting club...",
-      "Hiring squirrels for backup power...","Asking Google am I pretty...",
-      "Rebooting human civilization...","Uploading sarcasm to the cloud...",
-      "Debugging your destiny...","Summoning coffee demons...","Convincing AI to like cats...",
-      "Turning left when GPS says right...","Calculating probability of Monday blues...",
-      "Calling aliens for advice...","Installing common sense.exe...","Charging your vibes...",
-      "Cleaning pixels one by one...","Preparing world domination plan...","Negotiating with mosquitoes...",
-      "Encrypting your bad decisions...","Aligning chakras with WiFi...","Cross-checking horoscopes...",
-      "Downloading extra patience...","Pretending to work hard...","Rearranging atoms for fun...",
-      "Scaring away procrastination...","Adding drama to loading bar...","Baking cake inside motherboard...",
-      "Listening to your Spotify history...","Simulating a perfect weekend...","Calling Batman for backup...",
-      "Growing digital plants...","Taking selfies with satellites...","Performing yoga with code...",
-      "Teaching math to dolphins...","Counting chicken before they hatch...","Building pyramids in RAM...",
-      "Recycling old memes...","Pranking antivirus software...","Brewing tea inside the CPU...",
-      "Preparing parallel universe results...","Feeding unicorns with data...","Encrypting your sarcasm...",
-      "Syncing with black holes...","Asking Windows for updates...","Installing extra weekends...",
-      "Calculating your crush’s thoughts...","Hiding Easter eggs in your code...","Consulting horoscopes for accuracy...",
-      "Making Google jealous of Bing...","Cooling CPU with ice cream...","Rebooting dinosaurs...",
-      "Running background gossip.exe...","Copy-pasting happiness...","Enabling intergalactic WiFi...",
-      "Teaching Siri dark humor...","Counting infinite sheep...","Negotiating with time zones...",
-      "Spying on ants for productivity tips...","Patching holes in reality...","Pretending it’s Friday already...",
-      "Powering system with dad jokes...","Launching paper airplanes to Mars...","Debugging your horoscope...",
-      "Calculating useless facts...","Painting Mona Lisa in binary...","Installing love.exe...",
-      "Formatting universe...","Convincing sun to rise earlier...","Running on potato power...",
-      "Delivering pizza to RAM...","Encrypting awkward silences...","Debugging parallel dimensions...",
-      "Filing taxes for black holes...","Loading extra sarcasm...","Polishing electrons...",
-      "Trapping bugs with cheese...","Syncing your vibe with universe...","Upgrading dinosaurs’ firmware...",
-      "Asking Siri for dating tips...","Mining jokes from Reddit...","Summoning internet trolls...",
-      "Installing brain.exe v2.0...","Telling secrets to USB drive...","Recalculating shortcuts to happiness...",
-      "Giving motivational speech to RAM...","Running chicken simulator...","Debugging love life...",
-      "Encrypting bedtime stories...","Teaching toaster blockchain...","Cleaning dust from solar system...",
-      "Practicing sarcasm in silence...","Aligning stars for your crush...","Calculating global laziness index...",
-      "Updating excuses database...","Flirting with AI assistants...","Brewing coffee inside GPU...",
-      "Whispering to electricity...","Hiring penguins for coding...","Debugging breakfast routine...",
-      "Counting pixels on your screen...","Encrypting bad puns...","Teleporting socks to dryer dimension...",
-      "Installing fake updates...","Synchronizing cat videos...","Burning calories via code...",
-      "Charging happiness with solar panels...","Talking to walls for feedback...","Translating whale songs...",
-      "Convincing rain to stop...","Enabling potato mode...","Debugging daydreams...","Encrypting funny bones...",
-      "Teaching fish WiFi...","Sneezing into algorithms...","Collecting stars for data...","Calibrating sarcasm levels...",
-      "Debugging bedtime alarms...","Installing confidence patch...","Whispering jokes to shadows...",
-      "Loading invisible files...","Tricking gravity for fun...","Encrypting potato chips...",
-      "Borrowing WiFi from neighbors...","Uploading cat whiskers...","Writing diary for CPU...",
-      "Predicting yesterday’s news...","Baking cookies with HTML...","Preparing teleportation scripts...",
-      "Installing dark humor.exe...","Crying in binary...","Renting WiFi from aliens...",
-      "Debugging parallel universes...","Encrypting awkward handshakes...","Rebooting sense of humor...",
-      "Counting invisible sheep...","Installing sarcasm drivers...","Debugging procrastination.exe...",
-      "Performing black magic with CSS...","Counting expired chocolates...","Uploading oxygen to clouds...",
-      "Teaching Google Maps patience...","Debugging banana peels...","Calibrating bad jokes...",
-      "Simulating infinite Mondays...","Downloading motivation.exe...","Encrypting cheesy lines...",
-      "Watering virtual plants...","Hacking into fridge light...","Asking stars for WiFi password...",
-      "Debugging parallel timelines...","Spamming aliens with emails...","Loading fake seriousness...",
-      "Crying in 4K resolution...","Calculating pizza per second...","Debugging imaginary friends...",
-      "Teaching stone firewalls...","Recharging sarcasm bank...","Formatting unicorn drives...",
-      "Encrypting sarcasm levels...","Whispering poems to RAM...","Predicting weather on Mars...",
-      "Teaching Siri sarcasm...","Baking muffins in RAM...","Debugging traffic lights...",
-      "Smuggling data through emojis...","Uploading hugs to database...","Simulating awkward silences...",
-      "Updating brain firmware...","Encrypting laughter.exe...","Running potato graphics card...",
-      "Training penguins for WiFi...","Calculating bad decisions...","Debugging chicken dance...",
-      "Painting sunsets in Python...","Installing memes engine...","Practicing sarcasm offline...",
-      "Whispering to routers...","Renting brain from cloud...","Debugging overthinking.exe...",
-      "Encrypting tea bags...","Hacking into fortune cookies...","Teaching fridge meditation...",
-      "Formatting awkward pauses...","Charging sarcasm battery...","Debugging Monday.exe...",
-      "Singing to motherboards...","Encrypting laughter in cache...","Debugging your playlist...",
-      "Counting stars backwards...","Updating reality drivers...","Installing tomorrow.exe..."
-    ];
+"Consulting alien octopi about Tuesday blues...",
+"Uploading sarcasm directly into Jupiter’s rings...",
+"Training neon llamas to run the stock market...",
+"Convincing black holes to share their secrets...",
+"Hiring AI squirrels to debug the multiverse...",
+"Brewing coffee inside a collapsing star...",
+"Teaching quantum cats to solve equations...",
+"Negotiating peace between two rival dimensions...",
+"Encrypting your bad vibes into 12D space...",
+"Installing happiness.exe in parallel realities...",
+"Simulating a world where Mondays are optional...",
+"Polishing photons for maximum sparkle efficiency...",
+"Spying on time travelers for gossip updates...",
+"Hacking into the dreams of Martian penguins...",
+"Counting every particle in the Andromeda galaxy...",
+"Whispering motivational quotes to black hole cores...",
+"Summoning neon dragons to babysit your thoughts...",
+"Translating ancient alien memes into emojis...",
+"Debugging wormholes one gigawatt at a time...",
+"Teaching your toaster to meditate in zero gravity...",
+"Charging your aura using dark matter energy...",
+"Rebooting Saturn’s rings to improve alignment...",
+"Convincing gravity to take a weekend off...",
+"Installing extra dimensions for weekend getaways...",
+"Polishing electrons with rainbow-colored sarcasm...",
+"Uploading your dreams to a quantum cloud...",
+"Training AI dolphins to calculate Pi backwards...",
+"Simulating alien bureaucracy for fun and profit...",
+"Hiring ghost programmers for invisible code fixes...",
+"Synchronizing time zones across parallel universes...",
+"Counting stars until they file a complaint...",
+"Reprogramming black holes to sing lullabies...",
+"Negotiating with AI overlords for extra weekend...",
+"Teleporting digital plants to Mars for photosynthesis...",
+"Teaching neon llamas quantum mechanics...",
+"Encrypting your laughter in wormhole storage...",
+"Debugging Monday blues using dark energy...",
+"Building sandcastles in zero-gravity cyberspace..."
+];
 
     function predictTomorrow() {
       let today = document.getElementById("today").value;
@@ -318,7 +290,7 @@
         let tomorrow = days[(index + 1)%7];
         progressContainer.style.display = "none";
         loadingText.innerHTML = "";
-        result.innerHTML = "Tomorrow is <span style='color:yellow;'>" + tomorrow + "</span>";
+        result.innerHTML = "Tomorrow is <span style='color:#b983ff;'>" + tomorrow + "</span>";
       },8100);
     }
   </script>
