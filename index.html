@@ -1,0 +1,164 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>Tomorrow Day Predictor</title>
+  <style>
+    /* General Page Styling */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      background: linear-gradient(135deg, #6a11cb, #2575fc);
+      color: white;
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      box-sizing: border-box;
+    }
+
+    h1 {
+      font-size: clamp(1.5rem, 4vw, 2.5rem);
+      margin-bottom: 20px;
+    }
+
+    label {
+      font-size: clamp(1rem, 2vw, 1.2rem);
+      margin-bottom: 10px;
+      display: block;
+    }
+
+    select, button {
+      padding: 10px 15px;
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      border-radius: 8px;
+      border: none;
+      margin: 10px;
+      outline: none;
+    }
+
+    button {
+      background: #ff9800;
+      color: #fff;
+      cursor: pointer;
+      transition: 0.3s;
+    }
+
+    button:hover {
+      background: #e68900;
+    }
+
+    /* Processing Bar */
+    .progress-container {
+      width: 80%;
+      max-width: 400px;
+      background: rgba(255,255,255,0.2);
+      border-radius: 20px;
+      overflow: hidden;
+      margin-top: 20px;
+      height: 20px;
+      display: none;
+    }
+
+    .progress-bar {
+      height: 100%;
+      width: 0%;
+      background: linear-gradient(90deg, #ff9800, #ff5722);
+      animation: progressAnim 2s linear forwards;
+    }
+
+    @keyframes progressAnim {
+      from { width: 0%; }
+      to { width: 100%; }
+    }
+
+    /* Result */
+    #result {
+      margin-top: 20px;
+      font-size: clamp(1.2rem, 3vw, 1.6rem);
+      font-weight: bold;
+    }
+
+    /* Footer with your name */
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
+      color: rgba(255,255,255,0.7);
+    }
+
+    @media (max-width: 600px) {
+      select, button {
+        width: 90%;
+      }
+    }
+  </style>
+</head>
+<body>
+  <h1>🌞 Tomorrow Day Predictor 🌙</h1>
+
+  <label for="today">Select Today's Day:</label>
+  <select id="today">
+    <option value="">--Choose a Day--</option>
+    <option>Monday</option>
+    <option>Tuesday</option>
+    <option>Wednesday</option>
+    <option>Thursday</option>
+    <option>Friday</option>
+    <option>Saturday</option>
+    <option>Sunday</option>
+  </select>
+
+  <br>
+  <button onclick="predictTomorrow()">Predict Tomorrow</button>
+
+  <!-- Progress Bar -->
+  <div class="progress-container" id="progressContainer">
+    <div class="progress-bar" id="progressBar"></div>
+  </div>
+
+  <!-- Result -->
+  <div id="result"></div>
+
+  <!-- Footer -->
+  <footer>© Aryaman Gupta</footer>
+
+  <script>
+    function predictTomorrow() {
+      let today = document.getElementById("today").value;
+      let result = document.getElementById("result");
+      let progressContainer = document.getElementById("progressContainer");
+      let progressBar = document.getElementById("progressBar");
+
+      if(today === "") {
+        result.innerHTML = "⚠️ Please select today's day!";
+        return;
+      }
+
+      // Reset
+      result.innerHTML = "";
+      progressContainer.style.display = "block";
+      progressBar.style.width = "0%";
+
+      // Restart animation
+      progressBar.style.animation = "none";
+      progressBar.offsetHeight; // trigger reflow
+      progressBar.style.animation = "progressAnim 2s linear forwards";
+
+      // After 2s show result
+      setTimeout(() => {
+        let days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+        let index = days.indexOf(today);
+        let tomorrow = days[(index + 1) % 7];
+
+        progressContainer.style.display = "none";
+        result.innerHTML = "✅ Tomorrow is <span style='color:yellow;'>" + tomorrow + "</span>";
+      }, 2100);
+    }
+  </script>
+</body>
+</html>
