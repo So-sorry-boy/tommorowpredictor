@@ -14,7 +14,6 @@
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
       text-align: center;
-      background: linear-gradient(135deg, #000000 0%, #1a1a1a 100%);
       color: #eee;
       min-height: 100vh;
       display: flex;
@@ -23,15 +22,25 @@
       align-items: center;
       padding: 20px;
       overflow-x: hidden;
+      position: relative;
+    }
+
+    canvas#bgCanvas {
+      position: fixed;
+      top: 0;
+      left: 0;
+      width: 100%;
+      height: 100%;
+      z-index: -1;
     }
 
     /* ------------------- Title ------------------- */
     h1 {
       font-size: clamp(2rem, 5vw, 3rem);
       margin-bottom: 30px;
-      color: #b983ff;
+      color: #ffffff;
       letter-spacing: 1px;
-      text-shadow: 0 0 8px #b983ff, 0 0 15px #7f53ac, 0 0 25px #7f53ac77;
+      text-shadow: 0 0 8px #fff, 0 0 15px #ffffff55, 0 0 25px #ffffff33;
     }
 
     /* ------------------- Card ------------------- */
@@ -46,14 +55,14 @@
       align-items: center;
       width: 100%;
       max-width: 450px;
-      border: 1px solid rgba(185,131,255,0.3);
+      border: 1px solid rgba(255,255,255,0.2);
     }
 
     /* ------------------- Labels & Inputs ------------------- */
     label {
       font-size: clamp(1rem, 2vw, 1.2rem);
       margin-bottom: 10px;
-      color: #c3b1e1;
+      color: #ffffffcc;
       font-weight: 500;
     }
 
@@ -71,19 +80,19 @@
     }
 
     select:focus {
-      box-shadow: 0 0 10px #b983ff, 0 0 20px #7f53ac;
+      box-shadow: 0 0 10px #ffffffaa, 0 0 20px #ffffff55;
     }
 
     button {
-      background: linear-gradient(90deg, #7f53ac 0%, #b983ff 100%);
+      background: linear-gradient(90deg, #ffffffaa 0%, #ffffff55 100%);
       cursor: pointer;
       font-weight: bold;
       letter-spacing: 0.5px;
     }
 
     button:hover {
-      background: linear-gradient(90deg, #b983ff 0%, #7f53ac 100%);
-      box-shadow: 0 0 20px #b983ff, 0 0 35px #7f53ac;
+      background: linear-gradient(90deg, #ffffff 0%, #ffffffcc 100%);
+      box-shadow: 0 0 20px #ffffff, 0 0 35px #ffffffaa;
       transform: scale(1.05);
     }
 
@@ -96,7 +105,7 @@
     .progress-container {
       width: 90%;
       max-width: 400px;
-      background: rgba(185,131,255,0.15);
+      background: rgba(255,255,255,0.1);
       border-radius: 25px;
       overflow: hidden;
       margin-top: 20px;
@@ -108,8 +117,8 @@
     .progress-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #b983ff, #7f53ac);
-      box-shadow: 0 0 15px #b983ff, 0 0 25px #7f53ac;
+      background: linear-gradient(90deg, #ffffffaa, #ffffff55);
+      box-shadow: 0 0 15px #ffffffaa, 0 0 25px #ffffff55;
       animation: progressAnim 8s linear forwards;
       position: relative;
       overflow: hidden;
@@ -134,7 +143,7 @@
       margin-top: 15px;
       font-size: clamp(0.95rem, 2.5vw, 1.2rem);
       font-style: italic;
-      color: #b983ff;
+      color: #ffffffcc;
       min-height: 28px;
       opacity: 0;
       transition: opacity 0.5s ease;
@@ -146,8 +155,8 @@
       font-size: clamp(1.3rem, 3vw, 1.7rem);
       font-weight: bold;
       animation: fadeIn 0.8s ease-in;
-      color: #ffe8fa;
-      text-shadow: 0 2px 15px #7f53ac77, 0 0 25px #b983ff55;
+      color: #ffffff;
+      text-shadow: 0 2px 15px #ffffff55, 0 0 25px #ffffff33;
     }
 
     @keyframes fadeIn {
@@ -159,9 +168,9 @@
     footer {
       position: absolute;
       bottom: 10px;
-      font-size: clamp(0.9rem, 2vw, 1.2rem);
-      font-family: 'Playfair Display', serif;
-      color: #b983ff;
+      font-size: clamp(0.95rem, 2vw, 1.3rem);
+      font-family: 'Pacifico', cursive;
+      color: #ffffff;
       letter-spacing: 1px;
       animation: floaty 4s ease-in-out infinite alternate;
     }
@@ -175,6 +184,7 @@
   </style>
 </head>
 <body>
+  <canvas id="bgCanvas"></canvas>
   <h1>Tomorrow Day Predictor</h1>
 
   <div class="card">
@@ -200,9 +210,40 @@
   </div>
 
   <div id="result"></div>
-  <footer>— Made By Aryaman Gupta —</footer>
+  <footer>— Aryaman Gupta —</footer>
 
   <script>
+    /* ------------------- Background Animation ------------------- */
+    const canvas = document.getElementById('bgCanvas');
+    const ctx = canvas.getContext('2d');
+    let stars = [];
+    let w, h;
+    function initCanvas() {
+      w = canvas.width = window.innerWidth;
+      h = canvas.height = window.innerHeight;
+      stars = [];
+      for(let i=0;i<200;i++){
+        stars.push({x:Math.random()*w, y:Math.random()*h, r:Math.random()*1.2+0.5, d:Math.random()*0.5+0.2});
+      }
+    }
+    window.addEventListener('resize', initCanvas);
+    initCanvas();
+
+    function animateStars(){
+      ctx.clearRect(0,0,w,h);
+      for(let s of stars){
+        ctx.beginPath();
+        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
+        ctx.fillStyle = `rgba(255,255,255,${s.d})`;
+        ctx.fill();
+        s.y -= 0.2;
+        if(s.y < 0) s.y = h;
+      }
+      requestAnimationFrame(animateStars);
+    }
+    animateStars();
+
+    /* ------------------- Funny Lines & Prediction ------------------- */
     const funnyLines = [
 "Consulting alien octopi about Tuesday blues...",
 "Uploading sarcasm directly into Jupiter’s rings...",
@@ -284,14 +325,14 @@
       }
       showLine();
 
-      setTimeout(()=>{
+      setTimeout(()=> {
         let days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
         let index = days.indexOf(today);
         let tomorrow = days[(index + 1)%7];
         progressContainer.style.display = "none";
         loadingText.innerHTML = "";
-        result.innerHTML = "Tomorrow is <span style='color:#b983ff;'>" + tomorrow + "</span>";
-      },8100);
+        result.innerHTML = "Tomorrow is <span style='color:#ffffff;'>" + tomorrow + "</span>";
+      }, 8100);
     }
   </script>
 </body>
