@@ -4,8 +4,11 @@
   <meta charset="UTF-8">
   <meta name="viewport" content="width=device-width, initial-scale=1.0">
   <title>Tomorrow Day Predictor</title>
+
+  <!-- Stylish font for Aryaman's name -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&display=swap" rel="stylesheet">
+
   <style>
-    /* General Page Styling */
     body {
       margin: 0;
       font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
@@ -52,7 +55,7 @@
       background: #e68900;
     }
 
-    /* Processing Bar */
+    /* Progress Bar */
     .progress-container {
       width: 80%;
       max-width: 400px;
@@ -68,7 +71,7 @@
       height: 100%;
       width: 0%;
       background: linear-gradient(90deg, #ff9800, #ff5722);
-      animation: progressAnim 2s linear forwards;
+      animation: progressAnim 8s linear forwards;
     }
 
     @keyframes progressAnim {
@@ -76,19 +79,36 @@
       to { width: 100%; }
     }
 
+    /* Funny Loading Text */
+    #loadingText {
+      margin-top: 15px;
+      font-size: clamp(0.9rem, 2.5vw, 1.2rem);
+      font-style: italic;
+      color: #ffe082;
+      min-height: 24px;
+    }
+
     /* Result */
     #result {
       margin-top: 20px;
       font-size: clamp(1.2rem, 3vw, 1.6rem);
       font-weight: bold;
+      animation: fadeIn 0.8s ease-in;
     }
 
-    /* Footer with your name */
+    @keyframes fadeIn {
+      from { opacity: 0; transform: translateY(10px); }
+      to { opacity: 1; transform: translateY(0); }
+    }
+
+    /* Footer with Stylish Name */
     footer {
       position: absolute;
       bottom: 10px;
-      font-size: clamp(0.7rem, 1.5vw, 0.9rem);
-      color: rgba(255,255,255,0.7);
+      font-size: clamp(0.9rem, 2vw, 1.1rem);
+      font-family: 'Pacifico', cursive;
+      color: #ffe082;
+      letter-spacing: 1px;
     }
 
     @media (max-width: 600px) {
@@ -121,18 +141,29 @@
     <div class="progress-bar" id="progressBar"></div>
   </div>
 
+  <!-- Funny Loading Text -->
+  <div id="loadingText"></div>
+
   <!-- Result -->
   <div id="result"></div>
 
   <!-- Footer -->
-  <footer>© Aryaman Gupta</footer>
+  <footer>— Made By Aryaman Gupta —</footer>
 
   <script>
+    const funnyLines = [
+      "Transmitting data to aliens...",
+      "Enabling quantum computers...",
+      "Breaking some physics laws...",
+      "Searching through time loops..."
+    ];
+
     function predictTomorrow() {
       let today = document.getElementById("today").value;
       let result = document.getElementById("result");
       let progressContainer = document.getElementById("progressContainer");
       let progressBar = document.getElementById("progressBar");
+      let loadingText = document.getElementById("loadingText");
 
       if(today === "") {
         result.innerHTML = "⚠️ Please select today's day!";
@@ -143,21 +174,34 @@
       result.innerHTML = "";
       progressContainer.style.display = "block";
       progressBar.style.width = "0%";
+      loadingText.innerHTML = "";
 
       // Restart animation
       progressBar.style.animation = "none";
       progressBar.offsetHeight; // trigger reflow
-      progressBar.style.animation = "progressAnim 2s linear forwards";
+      progressBar.style.animation = "progressAnim 8s linear forwards";
 
-      // After 2s show result
+      // Show sarcastic lines every 2s
+      let i = 0;
+      loadingText.innerHTML = funnyLines[i];
+      let interval = setInterval(() => {
+        i++;
+        if (i < funnyLines.length) {
+          loadingText.innerHTML = funnyLines[i];
+        }
+      }, 2000);
+
+      // After 8s show result
       setTimeout(() => {
+        clearInterval(interval);
         let days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
         let index = days.indexOf(today);
         let tomorrow = days[(index + 1) % 7];
 
         progressContainer.style.display = "none";
+        loadingText.innerHTML = "";
         result.innerHTML = "✅ Tomorrow is <span style='color:yellow;'>" + tomorrow + "</span>";
-      }, 2100);
+      }, 8100);
     }
   </script>
 </body>
