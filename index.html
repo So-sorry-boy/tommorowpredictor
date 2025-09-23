@@ -246,9 +246,9 @@
       width: 0%;
       background: linear-gradient(90deg, var(--accent), rgba(255,255,255,0.18));
       box-shadow: 0 0 15px rgba(255,255,255,0.06);
-      animation: progressAnim 8s linear forwards;
       position: relative;
       overflow: hidden;
+      transition: width 0.15s linear;
     }
 
     .progress-bar::before {
@@ -262,7 +262,6 @@
       animation: shine 1.5s linear infinite;
     }
 
-    @keyframes progressAnim { from { width:0%; } to { width:100%; } }
     @keyframes shine { 0% { left:-50%; } 100% { left:100%; } }
 
     /* ------------------- Loading Text ------------------- */
@@ -340,7 +339,7 @@
 
     /* reduced motion */
     @media (prefers-reduced-motion: reduce) {
-      .marquee-track, .progress-bar, #loadingText, canvas#bgCanvas {
+      .marquee-track, #loadingText, canvas#bgCanvas {
         animation: none !important;
       }
     }
@@ -421,7 +420,8 @@
     </div>
 
     <div class="row" style="width:100%;">
-      <button onclick="predictTomorrow()" id="predictBtn">Predict</button>
+      <button id="predictBtn">Predict</button>
+      <button id="cancelBtn" class="secondary" disabled>Cancel</button>
       <!-- no client-side "activate premium" UI to prevent bypass; purchase through Buy button -->
     </div>
 
@@ -646,68 +646,129 @@
       if(e.key === STORAGE_KEYS.CURRENT_USER) updateCurrentUserUI();
     });
 
-    /* ------------------- Prediction logic (unchanged) ------------------- */
+    /* ------------------- Prediction logic (updated with single-click + cancel) ------------------- */
+    const predictBtn = document.getElementById('predictBtn');
+    const cancelBtn = document.getElementById('cancelBtn');
+    const progressContainer = document.getElementById('progressContainer');
+    const progressBar = document.getElementById('progressBar');
+    const loadingText = document.getElementById('loadingText');
+    const resultEl = document.getElementById('result');
+
+    let predictRunning = false;         // prevents double clicks
+    let progressInterval = null;        // interval for progress updates
+    let lineInterval = null;            // interval for cycling funny lines
+    let finalTimeout = null;            // final completion timeout
+    const DURATION_MS = 8000;           // total duration for progress (ms)
+
+    function resetProgressUI(){
+      if(progressInterval){ clearInterval(progressInterval); progressInterval = null; }
+      if(lineInterval){ clearInterval(lineInterval); lineInterval = null; }
+      if(finalTimeout){ clearTimeout(finalTimeout); finalTimeout = null; }
+      progressBar.style.width = '0%';
+      progressContainer.style.display = 'none';
+      loadingText.style.opacity = 0;
+    }
+
+    // Cancel handler
+    cancelBtn.addEventListener('click', ()=>{
+      if(!predictRunning) return;
+      // stop everything
+      resetProgressUI();
+      predictRunning = false;
+      // show cancelled status
+      resultEl.innerHTML = "❌ Prediction cancelled.";
+      // disable cancel, allow predict after 2 seconds (per request)
+      cancelBtn.disabled = true;
+      predictBtn.disabled = true;
+      setTimeout(()=>{
+        predictBtn.disabled = false;
+        cancelBtn.disabled = true;
+        resultEl.innerHTML = '';
+      }, 2000);
+    });
+
     function predictTomorrow() {
+      // guard: ensure single run at a time
+      if(predictRunning) return;
+      predictRunning = true;
+      predictBtn.disabled = true;
+      cancelBtn.disabled = false;
+      resultEl.innerHTML = '';
+
       let today = document.getElementById("today").value;
-      let result = document.getElementById("result");
-      let progressContainer = document.getElementById("progressContainer");
-      let progressBar = document.getElementById("progressBar");
-      let loadingText = document.getElementById("loadingText");
       const daysAhead = parseInt(document.getElementById('daysSelect').value || '1', 10);
       const currentUser = loadCurrentUser();
 
       if(!currentUser){
         alert('Please enter your name first (so we can check premium).');
+        // cleanup and re-enable
+        predictRunning = false;
+        predictBtn.disabled = false;
+        cancelBtn.disabled = true;
         return;
       }
 
       if(today === "") {
-        result.innerHTML = "⚠️ Please select today's day!";
+        resultEl.innerHTML = "⚠️ Please select today's day!";
+        predictRunning = false;
+        predictBtn.disabled = false;
+        cancelBtn.disabled = true;
         return;
       }
 
       // check premium permission for 3-day
       if(daysAhead > 2 && !isPremium(currentUser)){
         alert('3-day prediction is for premium users only. Buy premium from the banner to use this.');
+        predictRunning = false;
+        predictBtn.disabled = false;
+        cancelBtn.disabled = true;
         return;
       }
 
-      result.innerHTML = "";
-      progressContainer.style.display = "block";
-      progressBar.style.width = "0%";
-      loadingText.style.opacity = 0;
-      loadingText.innerHTML = "";
-      progressBar.style.animation = "none";
-      void progressBar.offsetHeight;
-      progressBar.style.animation = "progressAnim 8s linear forwards";
+      // Show progress UI
+      progressContainer.style.display = 'block';
+      progressBar.style.width = '0%';
+      loadingText.style.opacity = 1;
 
-      // pick 4 random non-repeating lines
+      // Choose 4 unique funny lines
       let selected = [];
       while(selected.length < 4){
         let line = funnyLines[Math.floor(Math.random()*funnyLines.length)];
         if(!selected.includes(line)) selected.push(line);
       }
 
-      let i = 0;
-      function showLine(){
-        if(i < selected.length){
-          loadingText.innerHTML = selected[i];
-          loadingText.style.opacity = 1;
-          i++;
-          setTimeout(showLine, 2000);
-        }
-      }
-      showLine();
+      // Cycle lines every 2s
+      let lineIndex = 0;
+      loadingText.innerHTML = selected[lineIndex];
+      lineIndex++;
+      lineInterval = setInterval(()=>{
+        if(lineIndex >= selected.length) lineIndex = 0;
+        loadingText.innerHTML = selected[lineIndex];
+        lineIndex++;
+      }, 2000);
 
-      setTimeout(()=> {
+      // Progress driven by JS so we can cancel anytime
+      const start = Date.now();
+      progressInterval = setInterval(()=>{
+        const elapsed = Date.now() - start;
+        const pct = Math.min(100, (elapsed / DURATION_MS) * 100);
+        progressBar.style.width = pct + '%';
+        if(pct >= 100){
+          clearInterval(progressInterval);
+          progressInterval = null;
+        }
+      }, 100);
+
+      // Finalize after DURATION_MS + small buffer (to simulate previous 8100ms)
+      finalTimeout = setTimeout(()=> {
+        resetProgressUI();
+        // compute outputs
         let days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
         let index = days.indexOf(today);
         let outputs = [];
         for(let k=1;k<=daysAhead;k++){
           outputs.push({n:k, day: days[(index + k)%7]});
         }
-        progressContainer.style.display = "none";
-        loadingText.innerHTML = "";
 
         let html = '';
         outputs.forEach(o=>{
@@ -724,16 +785,33 @@
           html += `<div style="margin-top:8px; font-size:0.9rem; color:var(--muted)">Buy premium for 3-day predictions & themes</div>`;
         }
 
-        result.innerHTML = html;
+        resultEl.innerHTML = html;
 
-      }, 8100);
+        // Done: allow predict again immediately
+        predictRunning = false;
+        predictBtn.disabled = false;
+        cancelBtn.disabled = true;
+
+      }, DURATION_MS + 100); // small buffer for visuals
     }
 
+    // wire predict button
+    predictBtn.addEventListener('click', predictTomorrow);
+
     /* ------------------- Init UI ------------------- */
+    function resetAllStateOnLoad(){
+      // ensure buttons consistent
+      predictBtn.disabled = false;
+      cancelBtn.disabled = true;
+      predictRunning = false;
+      resetProgressUI();
+    }
+
     loadSavedTheme();
     updateMarquee();
     updateCurrentUserUI();
     showPromoIfNeeded();
+    resetAllStateOnLoad();
   </script>
 </body>
 </html>
