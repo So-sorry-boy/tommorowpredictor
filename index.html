@@ -1,22 +1,24 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8" />
-  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
+  <meta charset="utf-8" />
+  <meta name="viewport" content="width=device-width,initial-scale=1" />
   <title>Tomorrow Day Predictor</title>
 
-  <!-- Stylish fonts -->
-  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
+  <!-- Fonts -->
+  <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;700&family=Roboto:wght@400;700&family=Poppins:wght@400;600&display=swap" rel="stylesheet">
 
   <style>
     :root{
-      --bg:#0a0a0a;
-      --card-bg: rgba(0,0,0,0.5);
-      --text:#ffffff;
+      --bg: #0a0a0a;
+      --card-bg: rgba(0,0,0,0.55);
+      --text: #ffffff;
       --muted: #ffffffcc;
-      --control-bg:#1a1a1a;
-      --accent: #ffffffaa;
-      --accent-dark: #ffffff55;
+      --control-bg: #161616;
+      --accent: #a8b3ff;
+      --accent-dark: #6d7bff;
+      --banner-bg: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
+      --font-family: 'Roboto', system-ui, -apple-system, 'Segoe UI', sans-serif;
     }
 
     /* Theme: light */
@@ -25,9 +27,10 @@
       --card-bg: rgba(255,255,255,0.95);
       --text: #111827;
       --muted: #111827cc;
-      --control-bg:#fff;
-      --accent: #111827aa;
-      --accent-dark: rgba(0,0,0,0.06);
+      --control-bg: #ffffff;
+      --accent: #334155;
+      --accent-dark: #111827;
+      --banner-bg: linear-gradient(90deg,#ffffff,#eef2f7);
     }
 
     /* Theme: neon */
@@ -36,98 +39,89 @@
       --card-bg: rgba(2,0,20,0.6);
       --text: #eaffff;
       --muted: #c0fff7cc;
-      --control-bg:#09041a;
-      --accent: #00ffd5aa;
-      --accent-dark: rgba(0,255,213,0.12);
+      --control-bg: #09041a;
+      --accent: #00ffd5;
+      --accent-dark: #00a3b5;
+      --banner-bg: linear-gradient(90deg,#00ffd5,#0ea5e9);
     }
 
-    /* ------------------- Base & Body ------------------- */
+    /* Premium Theme: Galaxy Glow */
+    body.theme-galaxy {
+      --bg: radial-gradient(circle at 20% 10%, #0b0f2b 0%, #000014 40%, #000 100%);
+      --card-bg: linear-gradient(180deg, rgba(10,10,30,0.86), rgba(0,0,0,0.6));
+      --text: #dbe9ff;
+      --muted: #99b4ffcc;
+      --control-bg: rgba(8,10,25,0.8);
+      --accent: #7c5cff;
+      --accent-dark: #2dd4bf;
+      --banner-bg: linear-gradient(90deg,#6d28d9,#3b82f6,#06b6d4);
+    }
+
+    /* Premium Theme: Royal Gold */
+    body.theme-royal {
+      --bg: linear-gradient(180deg,#120800,#1f0f04);
+      --card-bg: linear-gradient(180deg, rgba(40,24,6,0.9), rgba(20,12,2,0.8));
+      --text: #fff7e6;
+      --muted: #ffeb99cc;
+      --control-bg: rgba(36,20,6,0.9);
+      --accent: #ffd700;
+      --accent-dark: #ffb300;
+      --banner-bg: linear-gradient(90deg,#b8860b,#ffd700,#f59e0b);
+    }
+
+    /* Base */
+    * { box-sizing: border-box; }
     body {
       margin: 0;
-      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-      text-align: center;
-      color: var(--text);
       min-height: 100vh;
       display: flex;
       flex-direction: column;
-      justify-content: center;
       align-items: center;
-      padding: 20px;
-      overflow-x: hidden;
-      position: relative;
+      justify-content: center;
+      padding: 18px;
+      font-family: var(--font-family);
       background: var(--bg);
+      color: var(--text);
+      transition: background .35s ease, color .3s ease;
+      -webkit-font-smoothing:antialiased;
+      -moz-osx-font-smoothing:grayscale;
     }
 
-    canvas#bgCanvas {
-      position: fixed;
-      top: 0;
-      left: 0;
-      width: 100%;
-      height: 100%;
-      z-index: -2;
-      mix-blend-mode: screen;
-    }
-
-    /* ------------------- Small promo banner (professional) ------------------- */
+    /* Promo banner */
     .promo-banner {
       position: fixed;
-      top: 10px;
+      top: 12px;
       left: 50%;
       transform: translateX(-50%);
-      z-index: 50;
-      width: min(92%, 460px); /* not too wide so it doesn't look like an ad */
-      background: linear-gradient(90deg, rgba(255,255,255,0.06), rgba(255,255,255,0.03));
-      border-radius: 12px;
-      padding: 10px 12px;
+      z-index: 60;
+      width: min(96%, 560px);
       display: flex;
-      gap: 10px;
+      gap: 12px;
       align-items: center;
-      box-shadow: 0 6px 30px rgba(0,0,0,0.5);
-      border: 1px solid rgba(255,255,255,0.06);
+      padding: 10px 12px;
+      border-radius: 12px;
+      background: var(--banner-bg);
+      color: var(--text);
+      box-shadow: 0 10px 30px rgba(0,0,0,0.45);
+      border: 1px solid rgba(255,255,255,0.04);
       backdrop-filter: blur(6px);
       font-size: 0.95rem;
-      color: var(--text);
     }
+    .promo-content { flex: 1; text-align: left; }
+    .promo-title { font-weight: 700; font-size: 1rem; margin-bottom: 2px; }
+    .promo-line { font-size: .86rem; color: var(--muted); margin-bottom: 6px; }
+    .promo-price { font-weight: 800; font-size: 0.98rem; }
 
-    .promo-content {
-      flex: 1;
-      text-align: left;
-    }
-
-    .promo-title {
-      font-weight: 700;
-      font-size: 1rem;
-      margin-bottom: 4px;
-    }
-
-    .promo-line {
-      font-size: 0.86rem;
-      color: var(--muted);
-    }
-
-    .promo-price {
-      margin-top: 6px;
-      font-weight: 700;
-      font-size: 0.98rem;
-      color: var(--text);
-    }
-
-    .promo-actions {
-      display:flex;
-      gap:8px;
-      align-items:center;
-    }
-
+    .promo-actions { display:flex; gap:8px; align-items:center; }
     .promo-btn {
-      background: linear-gradient(90deg,var(--accent),var(--accent-dark));
-      color: #000;
-      padding: 8px 10px;
-      border-radius: 8px;
-      font-weight: 600;
-      cursor: pointer;
       border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      cursor: pointer;
+      font-weight: 700;
+      background: linear-gradient(90deg,var(--accent),var(--accent-dark));
+      color: rgba(0,0,0,0.9);
     }
-
     .promo-close {
       background: transparent;
       border: none;
@@ -135,250 +129,149 @@
       font-size: 18px;
       cursor: pointer;
       padding: 6px;
-      line-height: 1;
     }
 
-    /* ------------------- Title ------------------- */
-    h1 {
-      font-size: clamp(2rem, 5vw, 3rem);
-      margin-bottom: 30px;
-      color: var(--text);
-      letter-spacing: 1px;
-      text-shadow: 0 0 8px #fff;
+    /* Upgrade small button after dismiss */
+    #upgradeBtn {
+      position: fixed;
+      top: 12px;
+      right: 12px;
+      z-index: 70;
+      display: none;
+      border: none;
+      padding: 8px 12px;
+      border-radius: 10px;
+      font-weight: 700;
+      cursor: pointer;
+      background: linear-gradient(90deg,var(--accent),var(--accent-dark));
+      color: rgba(0,0,0,0.9);
+      box-shadow: 0 6px 20px rgba(0,0,0,0.35);
     }
 
-    /* ------------------- Card ------------------- */
-    .card {
+    /* Modal */
+    .modal-overlay {
+      position: fixed;
+      inset: 0;
+      display: none;
+      align-items: center;
+      justify-content: center;
+      background: rgba(0,0,0,0.55);
+      z-index: 120;
+    }
+    .modal {
+      width: min(96%, 520px);
+      max-width: 520px;
       background: var(--card-bg);
-      backdrop-filter: blur(15px);
-      border-radius: 18px;
-      padding: 22px;
-      box-shadow: 0 8px 40px rgba(0,0,0,0.7);
+      padding: 18px;
+      border-radius: 12px;
+      color: var(--text);
+      box-shadow: 0 20px 50px rgba(0,0,0,0.6);
+    }
+    .modal h2 { margin: 0 0 8px 0; font-size: 1.25rem; }
+    .modal p { margin: 6px 0; color: var(--muted); }
+    .modal ul { margin: 8px 0 12px 18px; color: var(--muted); }
+    .modal .modal-actions { display:flex; gap:8px; justify-content:flex-end; }
+
+    /* Card (main) */
+    .card {
+      width: 100%;
+      max-width: 820px;
+      background: var(--card-bg);
+      border-radius: 14px;
+      padding: 20px;
+      box-shadow: 0 12px 48px rgba(0,0,0,0.5);
       display: flex;
       flex-direction: column;
+      gap: 12px;
       align-items: center;
-      width: 100%;
-      max-width: 720px;
-      border: 1px solid rgba(255,255,255,0.06);
-      gap: 8px;
+      border: 1px solid rgba(255,255,255,0.03);
     }
 
-    /* ------------------- Labels & Inputs ------------------- */
-    label {
-      font-size: clamp(1rem, 2vw, 1.05rem);
-      margin-bottom: 6px;
-      color: var(--muted);
-      font-weight: 500;
-      align-self: flex-start;
-    }
-
-    .row {
-      width: 100%;
-      display:flex;
-      gap:10px;
-      align-items:center;
-      justify-content:center;
-      flex-wrap:wrap;
-    }
-
+    h1 { margin: 6px 0 6px; font-size: clamp(1.8rem,4vw,2.6rem); text-align:center; }
+    label { align-self: flex-start; color: var(--muted); font-weight: 600; }
+    .row { width:100%; display:flex; gap:10px; flex-wrap:wrap; align-items:center; }
     input[type="text"], select, button {
-      padding: 12px 16px;
-      font-size: clamp(0.95rem, 2vw, 1.05rem);
-      border-radius: 12px;
+      padding: 12px 14px;
+      border-radius: 10px;
       border: none;
-      margin: 6px 0;
-      outline: none;
       background: var(--control-bg);
       color: var(--text);
-      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
-      transition: 0.25s ease;
+      font-size: 1rem;
+      outline: none;
+      box-shadow: 0 6px 22px rgba(0,0,0,0.25);
     }
+    input[type="text"] { flex:1 1 220px; min-width:160px; }
+    select { min-width: 180px; }
+    .secondary { background: rgba(255,255,255,0.05); font-weight:700; color:var(--text); }
 
-    /* larger touch targets on small screens */
-    @media (max-width: 480px) {
-      input[type="text"], select, button {
-        padding: 14px 18px;
-        min-height: 44px;
-      }
-      .promo-banner { top: 8px; width: min(94%, 420px); }
-    }
+    /* Progress */
+    .progress-container { width: 90%; max-width: 480px; background: rgba(255,255,255,0.04); border-radius: 26px; overflow:hidden; height:22px; display:none; }
+    .progress-bar { height:100%; width:0%; background: linear-gradient(90deg,var(--accent),var(--accent-dark)); transition: width .12s linear; }
 
-    select:focus, input[type="text"]:focus {
-      box-shadow: 0 0 10px rgba(255,255,255,0.08), 0 0 18px var(--accent);
-    }
+    #loadingText { color:var(--muted); min-height:28px; font-style: italic; opacity:0; transition: opacity .25s; text-align:center; }
 
-    button {
-      background: linear-gradient(90deg, var(--accent) 0%, rgba(255,255,255,0.2) 100%);
-      cursor: pointer;
-      font-weight: bold;
-      letter-spacing: 0.5px;
-      color: #000;
-      border-radius: 12px;
-    }
+    #result { font-weight:800; text-align:center; font-size:1.05rem; color:var(--text); }
 
-    button.secondary {
-      background: rgba(255,255,255,0.06);
-      color: var(--text);
-      box-shadow: none;
-      font-weight:600;
-    }
+    .small-muted { color:var(--muted); font-size:.9rem; }
 
-    button[disabled] {
-      opacity: 0.5;
-      cursor: not-allowed;
-    }
+    footer { margin-top: 18px; color:var(--muted); font-family:'Playfair Display', serif; font-weight:600; }
 
-    /* ------------------- Progress Bar ------------------- */
-    .progress-container {
-      width: 90%;
-      max-width: 400px;
-      background: rgba(255,255,255,0.06);
-      border-radius: 25px;
-      overflow: hidden;
-      margin-top: 12px;
-      height: 22px;
-      display: none;
-      position: relative;
-    }
-
-    .progress-bar {
-      height: 100%;
-      width: 0%;
-      background: linear-gradient(90deg, var(--accent), rgba(255,255,255,0.18));
-      box-shadow: 0 0 15px rgba(255,255,255,0.06);
-      position: relative;
-      overflow: hidden;
-      transition: width 0.15s linear;
-    }
-
-    .progress-bar::before {
-      content: '';
-      position: absolute;
-      top: 0; left: -50%;
-      width: 50%;
-      height: 100%;
-      background: rgba(255,255,255,0.08);
-      transform: skewX(-20deg);
-      animation: shine 1.5s linear infinite;
-    }
-
-    @keyframes shine { 0% { left:-50%; } 100% { left:100%; } }
-
-    /* ------------------- Loading Text ------------------- */
-    #loadingText {
-      margin-top: 15px;
-      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
-      font-style: italic;
-      color: var(--muted);
-      min-height: 28px;
-      opacity: 0;
-      transition: opacity 0.5s ease;
-    }
-
-    /* ------------------- Result ------------------- */
-    #result {
-      margin-top: 18px;
-      font-size: clamp(1.05rem, 3vw, 1.2rem);
-      font-weight: bold;
-      animation: fadeIn 0.8s ease-in;
-      color: var(--text);
-      text-shadow: 0 2px 15px rgba(255,255,255,0.06);
-      word-break: break-word;
-    }
-
-    .small-muted {
-      font-size: 0.85rem;
-      color: var(--muted);
-    }
-
-    @keyframes fadeIn {
-      from { opacity:0; transform: translateY(6px); }
-      to { opacity:1; transform: translateY(0); }
-    }
-
-    footer {
-      position: absolute;
-      bottom: 10px;
-      font-size: clamp(0.9rem, 2vw, 1.2rem);
-      font-family: 'Playfair Display', serif;
-      color: var(--text);
-      letter-spacing: 1px;
-      font-weight: 600;
-      animation: floaty 4s ease-in-out infinite alternate;
-    }
-
-    @keyframes floaty { 0%{transform:translateY(0);} 100%{transform:translateY(-6px);} }
-
-    /* marquee */
-    .premium-marquee {
-      position: fixed;
-      top: 70px;
-      left: 50%;
-      transform: translateX(-50%);
-      width: min(92%, 720px);
-      background: rgba(0,0,0,0.28);
-      color: var(--text);
-      border-radius: 10px;
-      padding: 6px 10px;
-      display: none;
-      gap: 12px;
-      z-index: 20;
-      font-size: 0.95rem;
-      overflow: hidden;
-    }
-    .marquee-track {
-      white-space: nowrap;
-      display: inline-block;
-      animation: marquee 18s linear infinite;
-      direction: rtl;
-    }
-    @keyframes marquee {
-      0% { transform: translateX(0%); }
-      100% { transform: translateX(-50%); }
-    }
-
-    /* reduced motion */
-    @media (prefers-reduced-motion: reduce) {
-      .marquee-track, #loadingText, canvas#bgCanvas {
-        animation: none !important;
-      }
-    }
-
-    /* responsive tweaks */
-    @media (max-width: 760px) {
-      select, button, input[type="text"] { width: 100%; }
+    /* Responsive */
+    @media (max-width:760px) {
+      .promo-banner { left:50%; transform:translateX(-50%); width: calc(100% - 28px); top: 8px; padding:10px; }
       .card { padding: 16px; }
-      h1 { margin-top: 28px; }
-      .premium-marquee { top: 120px; font-size: 0.9rem; }
+      .row { align-items:stretch; }
+      select, button, input[type="text"] { width:100%; }
+      #upgradeBtn { top: 8px; right: 8px; padding: 8px 10px; }
     }
   </style>
 </head>
 <body>
-  <canvas id="bgCanvas" aria-hidden="true"></canvas>
 
-  <!-- Promotional professional banner (dismissable) -->
-  <div id="promoBanner" class="promo-banner" style="display:none;" role="region" aria-label="Premium promotion">
+  <!-- Promo Banner (theme-aware background via CSS variables) -->
+  <div id="promoBanner" class="promo-banner" role="region" aria-label="Premium promotion" style="display:none;">
     <div class="promo-content">
-      <div class="promo-title">Limited Time Premium — Unlock advanced features</div>
-      <div class="promo-line">3-day predictions • Exclusive themes • Premium badge & referral</div>
-      <div class="promo-price">Now ₹51 <span class="small-muted" style="margin-left:8px; text-decoration:line-through; opacity:0.8;">₹78,936.97</span> <span style="color:#ffd54f; margin-left:8px; font-weight:700;">~99.94% OFF</span></div>
+      <div class="promo-title">Limited Time Premium</div>
+      <div class="promo-line">3-day predictions • Exclusive themes • Premium sarcasm</div>
+      <div class="promo-price">
+        <span id="newPrice">₹49.99</span>
+        <span class="small-muted" style="margin-left:8px; text-decoration:line-through; opacity:0.85;" id="oldPrice">₹78,754 + 12% GST</span>
+        <span style="margin-left:8px; font-weight:800; color: #ffd54f;" id="discountPct">(~99.94% OFF)</span>
+      </div>
     </div>
 
-    <div class="promo-actions" aria-hidden="false">
-      <button id="buyPremiumBtn" class="promo-btn" aria-label="Buy Premium">Buy ₹51</button>
+    <div class="promo-actions">
+      <button id="buyPremiumBtn" class="promo-btn" aria-label="Buy Premium">Buy ₹49.99</button>
       <button id="closePromoBtn" class="promo-close" aria-label="Close promotion">✕</button>
     </div>
   </div>
 
-  <!-- Premium names marquee (if any) -->
-  <div class="premium-marquee" id="premiumMarquee" aria-hidden="true">
-    <div class="premium-pill" style="display:none;">Premium</div>
-    <div id="marqueeTrack" class="marquee-track" aria-hidden="true"></div>
+  <!-- Upgrade tiny button appears after closing the banner -->
+  <button id="upgradeBtn" title="Upgrade to Premium" aria-haspopup="dialog">Upgrade to Premium</button>
+
+  <!-- Modal -->
+  <div id="modalOverlay" class="modal-overlay" aria-hidden="true">
+    <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
+      <h2 id="modalTitle">Premium Sarcasm Pack 😏</h2>
+      <p class="small-muted">Unlock a few completely necessary luxuries (in very serious English):</p>
+      <ul>
+        <li>Predict up to <strong>3 days ahead</strong> — because one day is for peasants.</li>
+        <li>Exclusive <strong>Galaxy Glow</strong> & <strong>Royal Gold</strong> themes — for that extraordinary look.</li>
+        <li>Custom fonts & subtle flex badge (display optional).</li>
+        <li>Priority sarcasm support — real humans learn to mock faster.</li>
+      </ul>
+      <p><strong>Price:</strong> ₹49.99 <span class="small-muted" style="margin-left:8px; text-decoration:line-through;">₹78,754 + 12% GST</span></p>
+      <p class="small-muted" id="modalDiscount">You get ~99.94% OFF. Congrats.</p>
+      <div class="modal-actions">
+        <button id="modalCancel" class="secondary">Close</button>
+        <button id="modalBuy" class="promo-btn">Buy ₹49.99</button>
+      </div>
+    </div>
   </div>
 
   <h1>Tomorrow Day Predictor</h1>
 
-  <div class="card" role="main">
+  <div class="card" role="main" aria-live="polite">
     <label for="yourName">Enter your name (for account)</label>
     <div class="row" style="width:100%;">
       <input id="yourName" type="text" placeholder="Your name" autocomplete="name" />
@@ -386,7 +279,7 @@
     </div>
     <div class="small-muted" id="currentUserInfo">No user selected</div>
 
-    <hr style="width:100%; opacity:0.06; border: none; height:1px; margin:12px 0; background:rgba(255,255,255,0.03)">
+    <hr style="width:100%; opacity:0.06; border:none; height:1px; background:rgba(255,255,255,0.03)">
 
     <label for="today">Select Today's Day:</label>
     <div class="row" style="align-items:center;">
@@ -401,7 +294,6 @@
         <option>Sunday</option>
       </select>
 
-      <!-- Days selector: 1,2,3 days. 3-day only for premium users -->
       <select id="daysSelect" title="How many days ahead to predict?">
         <option value="1">1 day (Tomorrow)</option>
         <option value="2">2 days</option>
@@ -409,28 +301,38 @@
       </select>
     </div>
 
-    <!-- Theme selector (premium themes locked until server-verified) -->
     <div style="width:100%; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;">
       <label for="themeSelect" style="margin-right:auto">Theme:</label>
-      <select id="themeSelect" style="width:200px;">
+      <select id="themeSelect" style="width:220px;">
         <option value="default">Default (Dark)</option>
         <option value="light">Light (Premium)</option>
         <option value="neon">Neon (Premium)</option>
+        <option value="galaxy">Galaxy Glow (Premium)</option>
+        <option value="royal">Royal Gold (Premium)</option>
+      </select>
+    </div>
+
+    <div style="width:100%; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;">
+      <label for="fontSelect" style="margin-right:auto">Font:</label>
+      <select id="fontSelect" style="width:220px;">
+        <option value="Roboto, system-ui, -apple-system, 'Segoe UI', sans-serif">Default (Roboto)</option>
+        <option value="Poppins, system-ui, -apple-system, 'Segoe UI', sans-serif">Poppins</option>
+        <option value="'Pacifico', cursive">Pacifico (fun)</option>
+        <option value="'Playfair Display', serif">Playfair (serif)</option>
       </select>
     </div>
 
     <div class="row" style="width:100%;">
       <button id="predictBtn">Predict</button>
       <button id="cancelBtn" class="secondary" disabled>Cancel</button>
-      <!-- no client-side "activate premium" UI to prevent bypass; purchase through Buy button -->
     </div>
 
     <div class="progress-container" id="progressContainer">
       <div class="progress-bar" id="progressBar"></div>
     </div>
 
-    <div id="loadingText"></div>
-    <div id="result"></div>
+    <div id="loadingText" aria-hidden="true"></div>
+    <div id="result" role="status"></div>
 
     <div style="width:100%; display:flex; gap:10px; justify-content:space-between; margin-top:8px;">
       <div class="small-muted" id="premiumStatus">Premium users: 0</div>
@@ -441,105 +343,54 @@
   <footer>— Aryaman Gupta —</footer>
 
   <script>
-    /* ------------------- Config & Storage ------------------- */
+    /* ---------------- config & storage ---------------- */
     const STORAGE_KEYS = {
-      PREMIUM_USERS: 'tp_premium_users_v1',     // server should populate this or admin tools; client will only read
+      PREMIUM_USERS: 'tp_premium_users_v1',
       SELECTED_THEME: 'tp_selected_theme_v1',
       CURRENT_USER: 'tp_current_user_v1',
       PROMO_DISMISSED: 'tp_promo_dismissed_v1'
     };
 
-    /* ------------------- Background Animation (mobile optimized) ------------------- */
-    const canvas = document.getElementById('bgCanvas');
-    const ctx = canvas.getContext('2d');
-    let stars = [];
-    let w, h;
-    const isSmallScreen = () => window.innerWidth < 760;
-    const prefersReducedMotion = window.matchMedia('(prefers-reduced-motion: reduce)').matches;
+    /* ---------------- promo price calc & display ---------------- */
+    const OLD_PRICE_BASE = 78754; // base
+    const OLD_PRICE_GST = 0.12; // 12%
+    const OLD_PRICE_TOTAL = OLD_PRICE_BASE * (1 + OLD_PRICE_GST); // 88264.48
+    const NEW_PRICE = 49.99;
 
-    function initCanvas() {
-      w = canvas.width = window.innerWidth;
-      h = canvas.height = window.innerHeight;
-      stars = [];
-      // reduce star count on small screens to save CPU/GPU
-      let starCount = 200;
-      if (isSmallScreen()) starCount = Math.max(40, Math.floor(window.innerWidth / 10)); // ~40-76
-      if (prefersReducedMotion) starCount = Math.min(starCount, 30);
-      for(let i=0;i<starCount;i++){
-        stars.push({
-          x: Math.random()*w,
-          y: Math.random()*h,
-          r: Math.random()*1.2+0.4,
-          d: Math.random()*0.6+0.2,
-          vy: Math.random()*0.4 + 0.05
-        });
-      }
+    function formatINR(n) {
+      // simple formatting with rupee symbol and 2 decimals
+      return '₹' + Number(n).toLocaleString('en-IN', {maximumFractionDigits:2, minimumFractionDigits: (Number(n)%1===0?0:2)});
     }
-    window.addEventListener('resize', () => {
-      initCanvas();
-    });
-    initCanvas();
 
-    // throttle frames on small screens to reduce CPU usage
-    let frameCounter = 0;
-    const frameSkip = isSmallScreen() ? 2 : 0; // skip 2 frames on small screens
-    function animateStars(){
-      frameCounter++;
-      if (frameSkip > 0 && (frameCounter % (frameSkip + 1) !== 0)) {
-        requestAnimationFrame(animateStars);
-        return;
-      }
-      ctx.clearRect(0,0,w,h);
-      for(let s of stars){
-        ctx.beginPath();
-        ctx.arc(s.x,s.y,s.r,0,Math.PI*2);
-        ctx.fillStyle = `rgba(255,255,255,${s.d})`;
-        ctx.fill();
-        s.y -= s.vy;
-        if(s.y < -10) s.y = h + 10;
-      }
-      requestAnimationFrame(animateStars);
-    }
-    if (!prefersReducedMotion) animateStars();
+    const promoBanner = document.getElementById('promoBanner');
+    document.getElementById('newPrice').innerText = formatINR(NEW_PRICE);
+    document.getElementById('oldPrice').innerText = `₹${OLD_PRICE_BASE.toLocaleString('en-IN')} + 12% GST`;
+    const pctOff = ((OLD_PRICE_TOTAL - NEW_PRICE) / OLD_PRICE_TOTAL) * 100;
+    document.getElementById('discountPct').innerText = `(~${pctOff.toFixed(2)}% OFF)`;
+    document.getElementById('modalDiscount').innerText = `You get ~${pctOff.toFixed(2)}% OFF. Congrats.`;
 
-    /* ------------------- Funny lines ------------------- */
-    const funnyLines = [
-      "Consulting alien octopi about Tuesday blues...",
-      "Uploading sarcasm directly into Jupiter’s rings...",
-      "Training neon llamas to run the stock market...",
-      "Convincing black holes to share their secrets...",
-      "Hiring AI squirrels to debug the multiverse...",
-      "Brewing coffee inside a collapsing star...",
-      "Teaching quantum cats to solve equations...",
-      "Negotiating peace between two rival dimensions...",
-      "Encrypting your bad vibes into 12D space...",
-      "Installing happiness.exe in parallel realities..."
-    ];
+    /* ---------------- misc UI elements ---------------- */
+    const upgradeBtn = document.getElementById('upgradeBtn');
+    const modalOverlay = document.getElementById('modalOverlay');
+    const modalCancel = document.getElementById('modalCancel');
+    const modalBuy = document.getElementById('modalBuy');
 
-    /* ------------------- Premium list (read-only client) ------------------- */
+    /* ---------------- remove marquee: (we simply do not include any marquee code) ---------------- */
+
+    /* ---------------- premium users list (read-only client) ---------------- */
     function loadPremiumUsers(){
       try {
         const raw = localStorage.getItem(STORAGE_KEYS.PREMIUM_USERS);
         return raw ? JSON.parse(raw) : [];
       } catch(e){ return []; }
     }
-    function updateMarquee(){
-      const container = document.getElementById('premiumMarquee');
-      const track = document.getElementById('marqueeTrack');
+
+    function updatePremiumStatusUI(){
       const users = loadPremiumUsers();
-      if(users.length === 0){
-        container.style.display = 'none';
-        track.innerHTML = '';
-        document.getElementById('premiumStatus').innerText = `Premium users: 0`;
-        return;
-      }
-      const content = users.map(u => `${u}`).join(' • ');
-      track.innerText = `${content}   •   ${content}`;
-      container.style.display = 'flex';
       document.getElementById('premiumStatus').innerText = `Premium users: ${users.length}`;
     }
 
-    /* ------------------- Current user & theme ------------------- */
+    /* ---------------- current user and theme ---------------- */
     function normalizeName(name){ return (name||'').trim(); }
     function saveCurrentUser(name){
       name = normalizeName(name);
@@ -576,77 +427,100 @@
       const opt3 = Array.from(daysSelect.options).find(o => o.value === '3');
       if(opt3) opt3.disabled = !isP;
       Array.from(themeSelect.options).forEach(o=>{
-        if(o.value === 'light' || o.value === 'neon') o.disabled = !isP;
+        if(o.value === 'light' || o.value === 'neon' || o.value === 'galaxy' || o.value === 'royal') {
+          // premium locked except default
+          if(o.value === 'default') o.disabled = false;
+          else o.disabled = !isP;
+        }
       });
-      document.getElementById('hintText').innerText = isP ? 'Premium features unlocked ✅' : 'Buy premium from banner to unlock 3-day & themes';
+      document.getElementById('hintText').innerText = isP ? 'Premium features unlocked ✅' : 'Buy premium from the banner to unlock 3-day & themes';
     }
 
-    /* ------------------- Theme handling ------------------- */
-    function applyTheme(themeVal){
-      document.body.classList.remove('theme-light','theme-neon');
-      if(themeVal === 'light') document.body.classList.add('theme-light');
-      if(themeVal === 'neon') document.body.classList.add('theme-neon');
-      localStorage.setItem(STORAGE_KEYS.SELECTED_THEME, themeVal);
+    /* ---------------- theme & font handling ---------------- */
+    const themeSelect = document.getElementById('themeSelect');
+    const fontSelect = document.getElementById('fontSelect');
+
+    function applyTheme(theme) {
+      // cleanup
+      document.body.classList.remove('theme-light','theme-neon','theme-galaxy','theme-royal');
+      if(theme === 'light') document.body.classList.add('theme-light');
+      if(theme === 'neon') document.body.classList.add('theme-neon');
+      if(theme === 'galaxy') document.body.classList.add('theme-galaxy');
+      if(theme === 'royal') document.body.classList.add('theme-royal');
+      localStorage.setItem(STORAGE_KEYS.SELECTED_THEME, theme);
     }
-    function loadSavedTheme(){
+
+    function loadSavedTheme() {
       const t = localStorage.getItem(STORAGE_KEYS.SELECTED_THEME) || 'default';
-      const sel = document.getElementById('themeSelect');
-      if(sel) sel.value = t;
+      if(themeSelect) themeSelect.value = t;
       applyTheme(t);
     }
 
-    /* ------------------- Promo banner handling ------------------- */
-    const PROMO_KEY = STORAGE_KEYS.PROMO_DISMISSED;
-    function showPromoIfNeeded(){
-      const dismissed = localStorage.getItem(PROMO_KEY) === '1';
-      if(dismissed) return;
-      // show banner
-      const banner = document.getElementById('promoBanner');
-      banner.style.display = 'flex';
-    }
-    function dismissPromo(){
-      localStorage.setItem(PROMO_KEY, '1');
-      const banner = document.getElementById('promoBanner');
-      banner.style.display = 'none';
-    }
-
-    /* ------------------- Wire up UI events (no client-side activation) ------------------- */
-    document.getElementById('closePromoBtn').addEventListener('click', ()=>{
-      dismissPromo();
-    });
-    // Buy button: placeholder — should call server create-order and redirect to payment provider
-    document.getElementById('buyPremiumBtn').addEventListener('click', ()=>{
-      alert('Buy flow: frontend should call server to create an order and redirect to payment (UPI/PSP). After server-side verification premium will be activated for your account.');
-      // Here implement: fetch('/api/create-order', {method:'POST', body: JSON...}) -> get payment link or UPI deeplink -> redirect
-    });
-
-    document.getElementById('saveNameBtn').addEventListener('click', ()=>{
-      const name = document.getElementById('yourName').value;
-      if(!name.trim()){
-        alert('Please enter your name to continue.');
-        return;
-      }
-      saveCurrentUser(name.trim());
-    });
-
-    document.getElementById('themeSelect').addEventListener('change', (e)=>{
-      const selected = e.target.value;
+    themeSelect.addEventListener('change', (e)=>{
+      const sel = e.target.value;
       const current = loadCurrentUser();
-      if((selected === 'light' || selected === 'neon') && !isPremium(current)){
-        alert('Theme unlocked for premium users only. Buy premium from the banner.');
+      if((sel === 'light' || sel === 'neon' || sel === 'galaxy' || sel === 'royal') && !isPremium(current)){
+        alert('That theme is available for premium users only. Purchase to unlock.');
         e.target.value = 'default';
         applyTheme('default');
         return;
       }
-      applyTheme(selected);
+      applyTheme(sel);
     });
 
-    window.addEventListener('storage', (e)=>{
-      if(e.key === STORAGE_KEYS.PREMIUM_USERS) updateMarquee();
-      if(e.key === STORAGE_KEYS.CURRENT_USER) updateCurrentUserUI();
+    fontSelect.addEventListener('change', (e)=>{
+      const val = e.target.value;
+      document.documentElement.style.setProperty('--font-family', val);
+      document.body.style.setProperty('font-family', val);
+      localStorage.setItem('tp_selected_font_v1', val);
     });
 
-    /* ------------------- Prediction logic (updated with single-click + cancel) ------------------- */
+    // load saved font
+    (function(){
+      const saved = localStorage.getItem('tp_selected_font_v1');
+      if(saved){
+        fontSelect.value = saved;
+        document.body.style.setProperty('font-family', saved);
+      }
+    })();
+
+    /* ---------------- promo banner show/hide & upgrade flow ---------------- */
+    const PROMO_KEY = STORAGE_KEYS.PROMO_DISMISSED;
+    function showPromoIfNeeded(){
+      const dismissed = localStorage.getItem(PROMO_KEY) === '1';
+      if(!dismissed) promoBanner.style.display = 'flex';
+      else {
+        promoBanner.style.display = 'none';
+        upgradeBtn.style.display = 'block';
+      }
+    }
+    function dismissPromo(){
+      localStorage.setItem(PROMO_KEY, '1');
+      promoBanner.style.display = 'none';
+      upgradeBtn.style.display = 'block';
+    }
+
+    // wire promo controls
+    document.getElementById('closePromoBtn').addEventListener('click', dismissPromo);
+    document.getElementById('buyPremiumBtn').addEventListener('click', ()=>{
+      alert('Buy flow placeholder: integrate server-side order/create payment link here.');
+    });
+
+    // upgrade button opens modal
+    upgradeBtn.addEventListener('click', ()=>{
+      modalOverlay.style.display = 'flex';
+      modalOverlay.setAttribute('aria-hidden', 'false');
+    });
+
+    modalCancel.addEventListener('click', ()=>{
+      modalOverlay.style.display = 'none';
+      modalOverlay.setAttribute('aria-hidden', 'true');
+    });
+    modalBuy.addEventListener('click', ()=>{
+      alert('Buy flow placeholder: integrate server-side order/create payment link here.');
+    });
+
+    /* ---------------- core prediction logic (single-click + cancel + 2s cooldown) ---------------- */
     const predictBtn = document.getElementById('predictBtn');
     const cancelBtn = document.getElementById('cancelBtn');
     const progressContainer = document.getElementById('progressContainer');
@@ -654,30 +528,39 @@
     const loadingText = document.getElementById('loadingText');
     const resultEl = document.getElementById('result');
 
-    let predictRunning = false;         // prevents double clicks
-    let progressInterval = null;        // interval for progress updates
-    let lineInterval = null;            // interval for cycling funny lines
-    let finalTimeout = null;            // final completion timeout
-    const DURATION_MS = 8000;           // total duration for progress (ms)
+    const funnyLines = [
+      "Consulting alien octopi about Tuesday blues...",
+      "Uploading sarcasm directly into Jupiter’s rings...",
+      "Training neon llamas to run the stock market...",
+      "Convincing black holes to share their secrets...",
+      "Hiring AI squirrels to debug the multiverse...",
+      "Brewing coffee inside a collapsing star...",
+      "Teaching quantum cats to solve equations...",
+      "Negotiating peace between two rival dimensions...",
+      "Encrypting your bad vibes into 12D space...",
+      "Installing happiness.exe in parallel realities..."
+    ];
+
+    let predictRunning = false;
+    let progressInterval = null;
+    let lineInterval = null;
+    let finalTimeout = null;
+    const DURATION_MS = 8000;
 
     function resetProgressUI(){
       if(progressInterval){ clearInterval(progressInterval); progressInterval = null; }
       if(lineInterval){ clearInterval(lineInterval); lineInterval = null; }
       if(finalTimeout){ clearTimeout(finalTimeout); finalTimeout = null; }
-      progressBar.style.width = '0%';
-      progressContainer.style.display = 'none';
-      loadingText.style.opacity = 0;
+      if(progressBar) progressBar.style.width = '0%';
+      if(progressContainer) progressContainer.style.display = 'none';
+      if(loadingText) { loadingText.style.opacity = 0; loadingText.innerText = ''; }
     }
 
-    // Cancel handler
     cancelBtn.addEventListener('click', ()=>{
       if(!predictRunning) return;
-      // stop everything
       resetProgressUI();
       predictRunning = false;
-      // show cancelled status
       resultEl.innerHTML = "❌ Prediction cancelled.";
-      // disable cancel, allow predict after 2 seconds (per request)
       cancelBtn.disabled = true;
       predictBtn.disabled = true;
       setTimeout(()=>{
@@ -687,67 +570,57 @@
       }, 2000);
     });
 
-    function predictTomorrow() {
-      // guard: ensure single run at a time
+    function predictTomorrow(){
       if(predictRunning) return;
       predictRunning = true;
       predictBtn.disabled = true;
       cancelBtn.disabled = false;
       resultEl.innerHTML = '';
 
-      let today = document.getElementById("today").value;
+      const today = document.getElementById('today').value;
       const daysAhead = parseInt(document.getElementById('daysSelect').value || '1', 10);
       const currentUser = loadCurrentUser();
 
       if(!currentUser){
         alert('Please enter your name first (so we can check premium).');
-        // cleanup and re-enable
         predictRunning = false;
         predictBtn.disabled = false;
         cancelBtn.disabled = true;
         return;
       }
-
-      if(today === "") {
+      if(!today){
         resultEl.innerHTML = "⚠️ Please select today's day!";
         predictRunning = false;
         predictBtn.disabled = false;
         cancelBtn.disabled = true;
         return;
       }
-
-      // check premium permission for 3-day
       if(daysAhead > 2 && !isPremium(currentUser)){
-        alert('3-day prediction is for premium users only. Buy premium from the banner to use this.');
+        alert('3-day prediction is for premium users only. Buy premium to use this.');
         predictRunning = false;
         predictBtn.disabled = false;
         cancelBtn.disabled = true;
         return;
       }
 
-      // Show progress UI
+      // show progress UI
       progressContainer.style.display = 'block';
       progressBar.style.width = '0%';
       loadingText.style.opacity = 1;
 
-      // Choose 4 unique funny lines
-      let selected = [];
+      // pick lines
+      const selected = [];
       while(selected.length < 4){
-        let line = funnyLines[Math.floor(Math.random()*funnyLines.length)];
-        if(!selected.includes(line)) selected.push(line);
+        const l = funnyLines[Math.floor(Math.random()*funnyLines.length)];
+        if(!selected.includes(l)) selected.push(l);
       }
-
-      // Cycle lines every 2s
-      let lineIndex = 0;
-      loadingText.innerHTML = selected[lineIndex];
-      lineIndex++;
+      let li = 0;
+      loadingText.innerText = selected[li++];
       lineInterval = setInterval(()=>{
-        if(lineIndex >= selected.length) lineIndex = 0;
-        loadingText.innerHTML = selected[lineIndex];
-        lineIndex++;
+        if(li >= selected.length) li = 0;
+        loadingText.innerText = selected[li++];
       }, 2000);
 
-      // Progress driven by JS so we can cancel anytime
       const start = Date.now();
       progressInterval = setInterval(()=>{
         const elapsed = Date.now() - start;
@@ -759,59 +632,67 @@
         }
       }, 100);
 
-      // Finalize after DURATION_MS + small buffer (to simulate previous 8100ms)
-      finalTimeout = setTimeout(()=> {
+      finalTimeout = setTimeout(()=>{
         resetProgressUI();
-        // compute outputs
-        let days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
-        let index = days.indexOf(today);
-        let outputs = [];
+        const days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
+        const index = days.indexOf(today);
+        const outputs = [];
         for(let k=1;k<=daysAhead;k++){
-          outputs.push({n:k, day: days[(index + k)%7]});
+          outputs.push({n:k, day: days[(index + k) % 7]});
         }
-
         let html = '';
         outputs.forEach(o=>{
-          if(o.n === 1) {
-            html += `Tomorrow is <span style='color:var(--text);'>${o.day}</span><br/>`;
-          } else {
-            html += `In ${o.n} days: <span style='color:var(--text);'>${o.day}</span><br/>`;
-          }
+          if(o.n === 1) html += `Tomorrow is <span style="color:var(--text);">${o.day}</span><br/>`;
+          else html += `In ${o.n} days: <span style="color:var(--text);">${o.day}</span><br/>`;
         });
-
         if(isPremium(currentUser)){
           html += `<div style="margin-top:8px; font-size:0.9rem; color:var(--muted)">You're a premium user ✅</div>`;
         } else {
           html += `<div style="margin-top:8px; font-size:0.9rem; color:var(--muted)">Buy premium for 3-day predictions & themes</div>`;
         }
-
         resultEl.innerHTML = html;
-
-        // Done: allow predict again immediately
         predictRunning = false;
         predictBtn.disabled = false;
         cancelBtn.disabled = true;
-
-      }, DURATION_MS + 100); // small buffer for visuals
+      }, DURATION_MS + 100);
     }
 
-    // wire predict button
     predictBtn.addEventListener('click', predictTomorrow);
 
-    /* ------------------- Init UI ------------------- */
+    /* ---------------- init UI state on load ---------------- */
+    document.getElementById('saveNameBtn').addEventListener('click', ()=>{
+      const name = document.getElementById('yourName').value;
+      if(!name.trim()){ alert('Please enter your name to continue.'); return; }
+      saveCurrentUser(name.trim());
+    });
+
+    // watch storage changes (premium list update)
+    window.addEventListener('storage', (e)=>{
+      if(e.key === STORAGE_KEYS.PREMIUM_USERS) updatePremiumStatusUI();
+      if(e.key === STORAGE_KEYS.CURRENT_USER) updateCurrentUserUI();
+    });
+
     function resetAllStateOnLoad(){
-      // ensure buttons consistent
       predictBtn.disabled = false;
       cancelBtn.disabled = true;
       predictRunning = false;
       resetProgressUI();
     }
 
+    // initial calls
     loadSavedTheme();
-    updateMarquee();
+    updatePremiumStatusUI();
     updateCurrentUserUI();
     showPromoIfNeeded();
     resetAllStateOnLoad();
+
+    // accessibility: close modal on ESC
+    window.addEventListener('keydown', (e) => {
+      if(e.key === 'Escape'){
+        modalOverlay.style.display = 'none';
+        modalOverlay.setAttribute('aria-hidden', 'true');
+      }
+    });
   </script>
 </body>
 </html>
