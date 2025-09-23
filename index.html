@@ -1,31 +1,59 @@
 <!DOCTYPE html>
 <html lang="en">
 <head>
-  <meta charset="UTF-8">
-  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <meta charset="UTF-8" />
+  <meta name="viewport" content="width=device-width, initial-scale=1.0"/>
   <title>Tomorrow Day Predictor</title>
 
   <!-- Stylish fonts -->
   <link href="https://fonts.googleapis.com/css2?family=Pacifico&family=Playfair+Display:wght@400;700&display=swap" rel="stylesheet">
 
   <style>
-    /* ------------------- Base & Body ------------------- */
- body {
-  margin: 0;
-  font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
-  text-align: center;
-  color: #ffffff; /* Text ko white rakho */
-  min-height: 100vh;
-  display: flex;
-  flex-direction: column;
-  justify-content: center;
-  align-items: center;
-  padding: 20px;
-  overflow-x: hidden;
-  position: relative;
-  background: #0a0a0a; /* Dark background */
-}
+    :root{
+      --bg:#0a0a0a;
+      --card-bg: rgba(0,0,0,0.5);
+      --text:#ffffff;
+      --muted: #ffffffcc;
+      --control-bg:#1a1a1a;
+      --accent: #ffffffaa;
+    }
 
+    /* Theme: light */
+    body.theme-light {
+      --bg: #f5f7fb;
+      --card-bg: rgba(255,255,255,0.85);
+      --text: #111827;
+      --muted: #111827cc;
+      --control-bg:#fff;
+      --accent: #111827aa;
+    }
+
+    /* Theme: neon */
+    body.theme-neon {
+      --bg: #04030a;
+      --card-bg: rgba(2,0,20,0.6);
+      --text: #eaffff;
+      --muted: #c0fff7cc;
+      --control-bg:#09041a;
+      --accent: #00ffd5aa;
+    }
+
+    /* ------------------- Base & Body ------------------- */
+    body {
+      margin: 0;
+      font-family: 'Segoe UI', Tahoma, Geneva, Verdana, sans-serif;
+      text-align: center;
+      color: var(--text);
+      min-height: 100vh;
+      display: flex;
+      flex-direction: column;
+      justify-content: center;
+      align-items: center;
+      padding: 20px;
+      overflow-x: hidden;
+      position: relative;
+      background: var(--bg);
+    }
 
     canvas#bgCanvas {
       position: fixed;
@@ -33,21 +61,64 @@
       left: 0;
       width: 100%;
       height: 100%;
-      z-index: -1;
+      z-index: -2;
+      mix-blend-mode: screen;
+    }
+
+    /* ------------------- Top marquee for premium users ------------------- */
+    .premium-marquee {
+      position: fixed;
+      top: 8px;
+      left: 50%;
+      transform: translateX(-50%);
+      width: min(95%, 1100px);
+      background: rgba(0,0,0,0.35);
+      color: var(--text);
+      border-radius: 14px;
+      padding: 6px 12px;
+      display: flex;
+      align-items: center;
+      gap: 12px;
+      z-index: 10;
+      border: 1px solid rgba(255,255,255,0.06);
+      font-size: 0.95rem;
+      overflow: hidden;
+      box-shadow: 0 6px 30px rgba(0,0,0,0.6);
+    }
+
+    .marquee-track {
+      white-space: nowrap;
+      display: inline-block;
+      animation: marquee 18s linear infinite;
+      direction: rtl;
+    }
+
+    @keyframes marquee {
+      0% { transform: translateX(0%); }
+      100% { transform: translateX(-50%); }
+    }
+
+    .premium-pill {
+      background: linear-gradient(90deg,var(--accent), rgba(255,255,255,0.25));
+      padding: 6px 10px;
+      border-radius: 999px;
+      font-weight: 600;
+      color: #000;
+      font-size: 0.9rem;
     }
 
     /* ------------------- Title ------------------- */
     h1 {
       font-size: clamp(2rem, 5vw, 3rem);
       margin-bottom: 30px;
-      color: #ffffff;
+      color: var(--text);
       letter-spacing: 1px;
       text-shadow: 0 0 8px #fff, 0 0 15px #ffffff55, 0 0 25px #ffffff33;
     }
 
     /* ------------------- Card ------------------- */
     .card {
-      background: rgba(0, 0, 0, 0.5);
+      background: var(--card-bg);
       backdrop-filter: blur(15px);
       border-radius: 25px;
       padding: 30px 25px;
@@ -56,61 +127,80 @@
       flex-direction: column;
       align-items: center;
       width: 100%;
-      max-width: 450px;
-      border: 1px solid rgba(255,255,255,0.2);
+      max-width: 650px;
+      border: 1px solid rgba(255,255,255,0.08);
+      gap: 8px;
     }
 
     /* ------------------- Labels & Inputs ------------------- */
     label {
       font-size: clamp(1rem, 2vw, 1.2rem);
-      margin-bottom: 10px;
-      color: #ffffffcc;
+      margin-bottom: 6px;
+      color: var(--muted);
       font-weight: 500;
+      align-self: flex-start;
     }
 
-    select, button {
-      padding: 12px 22px;
-      font-size: clamp(0.95rem, 2vw, 1.15rem);
+    .row {
+      width: 100%;
+      display:flex;
+      gap:10px;
+      align-items:center;
+      justify-content:center;
+      flex-wrap:wrap;
+    }
+
+    input[type="text"], select, button {
+      padding: 12px 16px;
+      font-size: clamp(0.95rem, 2vw, 1.05rem);
       border-radius: 12px;
       border: none;
-      margin: 10px 0;
+      margin: 6px 0;
       outline: none;
-      background: #1a1a1a;
-      color: #eee;
-      box-shadow: 0 4px 20px rgba(0,0,0,0.6);
-      transition: 0.3s ease;
+      background: var(--control-bg);
+      color: var(--text);
+      box-shadow: 0 4px 20px rgba(0,0,0,0.25);
+      transition: 0.25s ease;
     }
 
-    select:focus {
-      box-shadow: 0 0 10px #ffffffaa, 0 0 20px #ffffff55;
+    input[type="text"] {
+      min-width: 190px;
+      flex: 1 1 200px;
+    }
+
+    select:focus, input[type="text"]:focus {
+      box-shadow: 0 0 10px rgba(255,255,255,0.08), 0 0 20px var(--accent);
     }
 
     button {
-      background: linear-gradient(90deg, #ffffffaa 0%, #ffffff55 100%);
+      background: linear-gradient(90deg, var(--accent) 0%, rgba(255,255,255,0.2) 100%);
       cursor: pointer;
       font-weight: bold;
       letter-spacing: 0.5px;
+      color: #000;
+      border-radius: 12px;
     }
 
-    button:hover {
-      background: linear-gradient(90deg, #ffffff 0%, #ffffffcc 100%);
-      box-shadow: 0 0 20px #ffffff, 0 0 35px #ffffffaa;
-      transform: scale(1.05);
+    button.secondary {
+      background: rgba(255,255,255,0.06);
+      color: var(--text);
+      box-shadow: none;
+      font-weight:600;
     }
 
-    button:active {
-      transform: scale(0.97);
-      box-shadow: 0 2px 10px #0005;
+    button[disabled] {
+      opacity: 0.5;
+      cursor: not-allowed;
     }
 
     /* ------------------- Progress Bar ------------------- */
     .progress-container {
       width: 90%;
       max-width: 400px;
-      background: rgba(255,255,255,0.1);
+      background: rgba(255,255,255,0.06);
       border-radius: 25px;
       overflow: hidden;
-      margin-top: 20px;
+      margin-top: 12px;
       height: 22px;
       display: none;
       position: relative;
@@ -119,8 +209,8 @@
     .progress-bar {
       height: 100%;
       width: 0%;
-      background: linear-gradient(90deg, #ffffffaa, #ffffff55);
-      box-shadow: 0 0 15px #ffffffaa, 0 0 25px #ffffff55;
+      background: linear-gradient(90deg, var(--accent), rgba(255,255,255,0.18));
+      box-shadow: 0 0 15px rgba(255,255,255,0.06);
       animation: progressAnim 8s linear forwards;
       position: relative;
       overflow: hidden;
@@ -132,7 +222,7 @@
       top: 0; left: -50%;
       width: 50%;
       height: 100%;
-      background: rgba(255,255,255,0.2);
+      background: rgba(255,255,255,0.08);
       transform: skewX(-20deg);
       animation: shine 1.5s linear infinite;
     }
@@ -143,9 +233,9 @@
     /* ------------------- Loading Text ------------------- */
     #loadingText {
       margin-top: 15px;
-      font-size: clamp(0.95rem, 2.5vw, 1.2rem);
+      font-size: clamp(0.95rem, 2.5vw, 1.1rem);
       font-style: italic;
-      color: #ffffffcc;
+      color: var(--muted);
       min-height: 28px;
       opacity: 0;
       transition: opacity 0.5s ease;
@@ -153,66 +243,121 @@
 
     /* ------------------- Result ------------------- */
     #result {
-      margin-top: 25px;
-      font-size: clamp(1.3rem, 3vw, 1.7rem);
+      margin-top: 18px;
+      font-size: clamp(1.05rem, 3vw, 1.2rem);
       font-weight: bold;
       animation: fadeIn 0.8s ease-in;
-      color: #ffffff;
-      text-shadow: 0 2px 15px #ffffff55, 0 0 25px #ffffff33;
+      color: var(--text);
+      text-shadow: 0 2px 15px rgba(255,255,255,0.06);
+      word-break: break-word;
+    }
+
+    .small-muted {
+      font-size: 0.85rem;
+      color: var(--muted);
     }
 
     @keyframes fadeIn {
-      from { opacity:0; transform: translateY(10px); }
+      from { opacity:0; transform: translateY(6px); }
       to { opacity:1; transform: translateY(0); }
     }
 
     /* ------------------- Footer ------------------- */
-footer {
-  position: absolute;
-  bottom: 10px;
-  font-size: clamp(0.9rem, 2vw, 1.2rem);
-  font-family: 'Playfair Display', serif;
-  color: #ffffff; /* White color for your name */
-  letter-spacing: 1px;
-  font-weight: 600; /* Slightly bolder */
-  animation: floaty 4s ease-in-out infinite alternate;
-}
+    footer {
+      position: absolute;
+      bottom: 10px;
+      font-size: clamp(0.9rem, 2vw, 1.2rem);
+      font-family: 'Playfair Display', serif;
+      color: var(--text);
+      letter-spacing: 1px;
+      font-weight: 600;
+      animation: floaty 4s ease-in-out infinite alternate;
+    }
 
     @keyframes floaty { 0%{transform:translateY(0);} 100%{transform:translateY(-6px);} }
 
     /* ------------------- Responsive ------------------- */
-    @media (max-width: 600px) {
-      select, button { width: 90%; }
+    @media (max-width: 760px) {
+      select, button, input[type="text"] { width: 100%; }
+      .card { padding: 18px; }
     }
   </style>
 </head>
 <body>
   <canvas id="bgCanvas"></canvas>
+
+  <!-- Premium marquee (top right-to-left moving names) -->
+  <div class="premium-marquee" id="premiumMarquee" style="display: none;">
+    <div class="premium-pill">Premium</div>
+    <div id="marqueeTrack" class="marquee-track" aria-hidden="true"></div>
+  </div>
+
   <h1>Tomorrow Day Predictor</h1>
 
   <div class="card">
-    <label for="today">Select Today's Day:</label>
-    <select id="today">
-      <option value="">--Choose a Day--</option>
-      <option>Monday</option>
-      <option>Tuesday</option>
-      <option>Wednesday</option>
-      <option>Thursday</option>
-      <option>Friday</option>
-      <option>Saturday</option>
-      <option>Sunday</option>
-    </select>
+    <!-- User identity (so we can match premium status client-side) -->
+    <label for="yourName">Enter your name (so we can check premium):</label>
+    <div class="row" style="width:100%;">
+      <input id="yourName" type="text" placeholder="Your name" />
+      <button id="saveNameBtn" class="secondary">Use</button>
+    </div>
+    <div class="small-muted" id="currentUserInfo">No user selected</div>
 
-    <button onclick="predictTomorrow()">Predict Tomorrow</button>
+    <hr style="width:100%; opacity:0.06; border: none; height:1px; margin:12px 0; background:rgba(255,255,255,0.03)">
+
+    <label for="today">Select Today's Day:</label>
+    <div class="row">
+      <select id="today">
+        <option value="">--Choose a Day--</option>
+        <option>Monday</option>
+        <option>Tuesday</option>
+        <option>Wednesday</option>
+        <option>Thursday</option>
+        <option>Friday</option>
+        <option>Saturday</option>
+        <option>Sunday</option>
+      </select>
+
+      <!-- Days selector: 1,2,3 days. 3-day only for premium users -->
+      <select id="daysSelect" title="How many days ahead to predict?">
+        <option value="1">1 day (Tomorrow)</option>
+        <option value="2">2 days</option>
+        <option value="3">3 days (Premium)</option>
+      </select>
+    </div>
+
+    <!-- Theme selector (locked for non-premium) -->
+    <div style="width:100%; display:flex; gap:10px; align-items:center; justify-content:center; flex-wrap:wrap;">
+      <label for="themeSelect" style="margin-right:auto">Theme:</label>
+      <select id="themeSelect" style="width:200px;">
+        <option value="default">Default (Dark)</option>
+        <option value="light">Light (Premium)</option>
+        <option value="neon">Neon (Premium)</option>
+      </select>
+    </div>
+
+    <div class="row" style="width:100%;">
+      <button onclick="predictTomorrow()" id="predictBtn">Predict</button>
+
+      <!-- Admin/Simulate payment: activate premium for a username -->
+      <input id="activateName" type="text" placeholder="Activate premium for name" style="min-width:180px; flex:1 1 180px;" />
+      <button id="activateBtn" class="secondary">Activate Premium</button>
+    </div>
 
     <div class="progress-container" id="progressContainer">
       <div class="progress-bar" id="progressBar"></div>
     </div>
 
     <div id="loadingText"></div>
+
+    <div id="result"></div>
+
+    <div style="width:100%; display:flex; gap:10px; justify-content:space-between; margin-top:8px;">
+      <div class="small-muted" id="premiumStatus">Premium users: 0</div>
+      <div class="small-muted" id="hintText">Pro tip: activate a name to simulate premium</div>
+    </div>
   </div>
 
-  <div id="result"></div>
   <footer>— Aryaman Gupta —</footer>
 
   <script>
@@ -226,7 +371,7 @@ footer {
       h = canvas.height = window.innerHeight;
       stars = [];
       for(let i=0;i<200;i++){
-        stars.push({x:Math.random()*w, y:Math.random()*h, r:Math.random()*1.2+0.5, d:Math.random()*0.5+0.2});
+        stars.push({x:Math.random()*w, y:Math.random()*h, r:Math.random()*1.2+0.5, d:Math.random()*0.5+0.12});
       }
     }
     window.addEventListener('resize', initCanvas);
@@ -248,55 +393,246 @@ footer {
 
     /* ------------------- Funny Lines & Prediction ------------------- */
     const funnyLines = [
-"Consulting alien octopi about Tuesday blues...",
-"Uploading sarcasm directly into Jupiter’s rings...",
-"Training neon llamas to run the stock market...",
-"Convincing black holes to share their secrets...",
-"Hiring AI squirrels to debug the multiverse...",
-"Brewing coffee inside a collapsing star...",
-"Teaching quantum cats to solve equations...",
-"Negotiating peace between two rival dimensions...",
-"Encrypting your bad vibes into 12D space...",
-"Installing happiness.exe in parallel realities...",
-"Simulating a world where Mondays are optional...",
-"Polishing photons for maximum sparkle efficiency...",
-"Spying on time travelers for gossip updates...",
-"Hacking into the dreams of Martian penguins...",
-"Counting every particle in the Andromeda galaxy...",
-"Whispering motivational quotes to black hole cores...",
-"Summoning neon dragons to babysit your thoughts...",
-"Translating ancient alien memes into emojis...",
-"Debugging wormholes one gigawatt at a time...",
-"Teaching your toaster to meditate in zero gravity...",
-"Charging your aura using dark matter energy...",
-"Rebooting Saturn’s rings to improve alignment...",
-"Convincing gravity to take a weekend off...",
-"Installing extra dimensions for weekend getaways...",
-"Polishing electrons with rainbow-colored sarcasm...",
-"Uploading your dreams to a quantum cloud...",
-"Training AI dolphins to calculate Pi backwards...",
-"Simulating alien bureaucracy for fun and profit...",
-"Hiring ghost programmers for invisible code fixes...",
-"Synchronizing time zones across parallel universes...",
-"Counting stars until they file a complaint...",
-"Reprogramming black holes to sing lullabies...",
-"Negotiating with AI overlords for extra weekend...",
-"Teleporting digital plants to Mars for photosynthesis...",
-"Teaching neon llamas quantum mechanics...",
-"Encrypting your laughter in wormhole storage...",
-"Debugging Monday blues using dark energy...",
-"Building sandcastles in zero-gravity cyberspace..."
-];
+      "Consulting alien octopi about Tuesday blues...",
+      "Uploading sarcasm directly into Jupiter’s rings...",
+      "Training neon llamas to run the stock market...",
+      "Convincing black holes to share their secrets...",
+      "Hiring AI squirrels to debug the multiverse...",
+      "Brewing coffee inside a collapsing star...",
+      "Teaching quantum cats to solve equations...",
+      "Negotiating peace between two rival dimensions...",
+      "Encrypting your bad vibes into 12D space...",
+      "Installing happiness.exe in parallel realities...",
+      "Simulating a world where Mondays are optional...",
+      "Polishing photons for maximum sparkle efficiency...",
+      "Spying on time travelers for gossip updates...",
+      "Hacking into the dreams of Martian penguins...",
+      "Counting every particle in the Andromeda galaxy...",
+      "Whispering motivational quotes to black hole cores...",
+      "Summoning neon dragons to babysit your thoughts...",
+      "Translating ancient alien memes into emojis...",
+      "Debugging wormholes one gigawatt at a time...",
+      "Teaching your toaster to meditate in zero gravity...",
+      "Charging your aura using dark matter energy...",
+      "Rebooting Saturn’s rings to improve alignment...",
+      "Convincing gravity to take a weekend off...",
+      "Installing extra dimensions for weekend getaways...",
+      "Polishing electrons with rainbow-colored sarcasm...",
+      "Uploading your dreams to a quantum cloud...",
+      "Training AI dolphins to calculate Pi backwards...",
+      "Simulating alien bureaucracy for fun and profit...",
+      "Hiring ghost programmers for invisible code fixes...",
+      "Synchronizing time zones across parallel universes...",
+      "Counting stars until they file a complaint...",
+      "Reprogramming black holes to sing lullabies...",
+      "Negotiating with AI overlords for extra weekend...",
+      "Teleporting digital plants to Mars for photosynthesis...",
+      "Teaching neon llamas quantum mechanics...",
+      "Encrypting your laughter in wormhole storage...",
+      "Debugging Monday blues using dark energy...",
+      "Building sandcastles in zero-gravity cyberspace..."
+    ];
 
+    /* ------------------- Storage Helpers ------------------- */
+    const STORAGE_KEYS = {
+      PREMIUM_USERS: 'tp_premium_users_v1',
+      SELECTED_THEME: 'tp_selected_theme_v1',
+      CURRENT_USER: 'tp_current_user_v1'
+    };
+
+    function loadPremiumUsers(){
+      try {
+        const raw = localStorage.getItem(STORAGE_KEYS.PREMIUM_USERS);
+        return raw ? JSON.parse(raw) : [];
+      } catch(e){ return []; }
+    }
+    function savePremiumUsers(arr){
+      localStorage.setItem(STORAGE_KEYS.PREMIUM_USERS, JSON.stringify(arr));
+      updatePremiumUI();
+    }
+
+    function normalizeName(name){
+      return (name || "").trim();
+    }
+
+    function activatePremiumFor(name){
+      name = normalizeName(name);
+      if(!name) return false;
+      let users = loadPremiumUsers();
+      if(!users.includes(name)){
+        users.push(name);
+        savePremiumUsers(users);
+        return true;
+      }
+      return false;
+    }
+
+    function isPremium(name){
+      name = normalizeName(name);
+      if(!name) return false;
+      const users = loadPremiumUsers();
+      return users.includes(name);
+    }
+
+    function updateMarquee(){
+      const container = document.getElementById('premiumMarquee');
+      const track = document.getElementById('marqueeTrack');
+      const users = loadPremiumUsers();
+      if(users.length === 0){
+        container.style.display = 'none';
+        track.innerHTML = '';
+        document.getElementById('premiumStatus').innerText = `Premium users: 0`;
+        return;
+      }
+      // Build repeated content so marquee feels continuous
+      const content = users.map(u => `${u}`).join(' • ');
+      // repeat twice for smooth scrolling
+      track.innerText = `${content}   •   ${content}`;
+      container.style.display = 'flex';
+      document.getElementById('premiumStatus').innerText = `Premium users: ${users.length}`;
+    }
+
+    function saveCurrentUser(name){
+      name = normalizeName(name);
+      if(!name) {
+        localStorage.removeItem(STORAGE_KEYS.CURRENT_USER);
+      } else {
+        localStorage.setItem(STORAGE_KEYS.CURRENT_USER, name);
+      }
+      updateCurrentUserUI();
+    }
+
+    function loadCurrentUser(){
+      return localStorage.getItem(STORAGE_KEYS.CURRENT_USER) || '';
+    }
+
+    function updateCurrentUserUI(){
+      const name = loadCurrentUser();
+      const info = document.getElementById('currentUserInfo');
+      if(!name){
+        info.innerText = 'No user selected';
+        document.getElementById('yourName').value = '';
+      } else {
+        const premium = isPremium(name);
+        info.innerText = `Using name: ${name} ${premium ? '— Premium' : ''}`;
+      }
+      updateControlsBasedOnPremium();
+    }
+
+    function updateControlsBasedOnPremium(){
+      const name = loadCurrentUser();
+      const daysSelect = document.getElementById('daysSelect');
+      const themeSelect = document.getElementById('themeSelect');
+      const isP = isPremium(name);
+      // enable/disable 3-day option
+      const opt3 = Array.from(daysSelect.options).find(o => o.value === '3');
+      if(opt3) opt3.disabled = !isP;
+      // theme options: allow selecting but show note: only premium for light/neon
+      if(!isP){
+        // if a premium theme selected, revert to default
+        if(themeSelect.value !== 'default'){
+          themeSelect.value = 'default';
+          applyTheme('default');
+        }
+      }
+      // visual indicator: disable theme options in non-premium
+      Array.from(themeSelect.options).forEach(o=>{
+        if(o.value === 'light' || o.value === 'neon'){
+          o.disabled = !isP;
+        }
+      });
+
+      // update hint text
+      document.getElementById('hintText').innerText = isP ? 'Premium features unlocked ✅' : 'Upgrade to unlock 3-day and extra themes';
+    }
+
+    /* ------------------- Theme handling ------------------- */
+    function applyTheme(themeVal){
+      document.body.classList.remove('theme-light','theme-neon');
+      if(themeVal === 'light') document.body.classList.add('theme-light');
+      if(themeVal === 'neon') document.body.classList.add('theme-neon');
+      localStorage.setItem(STORAGE_KEYS.SELECTED_THEME, themeVal);
+    }
+
+    function loadSavedTheme(){
+      const t = localStorage.getItem(STORAGE_KEYS.SELECTED_THEME) || 'default';
+      const sel = document.getElementById('themeSelect');
+      if(sel) sel.value = t;
+      applyTheme(t);
+    }
+
+    /* ------------------- Wire up controls ------------------- */
+    document.getElementById('activateBtn').addEventListener('click', ()=>{
+      const name = document.getElementById('activateName').value;
+      if(!name.trim()){
+        alert('Enter a name to activate premium for.');
+        return;
+      }
+      const added = activatePremiumFor(name.trim());
+      if(added) {
+        alert(`${name} is now premium (simulated).`);
+        document.getElementById('activateName').value = '';
+      } else {
+        alert(`${name} was already premium.`);
+      }
+    });
+
+    document.getElementById('saveNameBtn').addEventListener('click', ()=>{
+      const name = document.getElementById('yourName').value;
+      if(!name.trim()){
+        alert('Please enter your name to continue.');
+        return;
+      }
+      saveCurrentUser(name.trim());
+    });
+
+    document.getElementById('themeSelect').addEventListener('change', (e)=>{
+      const selected = e.target.value;
+      const current = loadCurrentUser();
+      if((selected === 'light' || selected === 'neon') && !isPremium(current)){
+        alert('Theme unlocked for premium users only. Activate premium to use this theme.');
+        e.target.value = 'default';
+        applyTheme('default');
+        return;
+      }
+      applyTheme(selected);
+    });
+
+    // initialize UI
+    updateMarquee();
+    loadSavedTheme();
+    updateCurrentUserUI();
+
+    // observe storage changes in other tabs
+    window.addEventListener('storage', (e)=>{
+      if(e.key === STORAGE_KEYS.PREMIUM_USERS) updateMarquee();
+      if(e.key === STORAGE_KEYS.CURRENT_USER) updateCurrentUserUI();
+      if(e.key === STORAGE_KEYS.SELECTED_THEME) loadSavedTheme();
+    });
+
+    /* ------------------- Prediction logic ------------------- */
     function predictTomorrow() {
       let today = document.getElementById("today").value;
       let result = document.getElementById("result");
       let progressContainer = document.getElementById("progressContainer");
       let progressBar = document.getElementById("progressBar");
       let loadingText = document.getElementById("loadingText");
+      const daysAhead = parseInt(document.getElementById('daysSelect').value || '1', 10);
+      const currentUser = loadCurrentUser();
+
+      if(!currentUser){
+        alert('Please enter your name first (so we can check premium).');
+        return;
+      }
 
       if(today === "") {
         result.innerHTML = "⚠️ Please select today's day!";
+        return;
+      }
+
+      // check premium permission for 3-day
+      if(daysAhead > 2 && !isPremium(currentUser)){
+        alert('3-day prediction is for premium users only. Activate premium to use this.');
         return;
       }
 
@@ -305,9 +641,9 @@ footer {
       progressBar.style.width = "0%";
       loadingText.style.opacity = 0;
       loadingText.innerHTML = "";
-
       progressBar.style.animation = "none";
-      progressBar.offsetHeight;
+      // force reflow
+      void progressBar.offsetHeight;
       progressBar.style.animation = "progressAnim 8s linear forwards";
 
       // pick 4 random non-repeating lines
@@ -331,10 +667,32 @@ footer {
       setTimeout(()=> {
         let days = ["Monday","Tuesday","Wednesday","Thursday","Friday","Saturday","Sunday"];
         let index = days.indexOf(today);
-        let tomorrow = days[(index + 1)%7];
+        let outputs = [];
+        for(let k=1;k<=daysAhead;k++){
+          outputs.push({n:k, day: days[(index + k)%7]});
+        }
         progressContainer.style.display = "none";
         loadingText.innerHTML = "";
-        result.innerHTML = "Tomorrow is <span style='color:#ffffff;'>" + tomorrow + "</span>";
+
+        // Build result string
+        let html = '';
+        outputs.forEach(o=>{
+          if(o.n === 1) {
+            html += `Tomorrow is <span style='color:var(--text);'>${o.day}</span><br/>`;
+          } else {
+            html += `In ${o.n} days: <span style='color:var(--text);'>${o.day}</span><br/>`;
+          }
+        });
+
+        // show premium badge if current user is premium
+        if(isPremium(currentUser)){
+          html += `<div style="margin-top:8px; font-size:0.9rem; color:var(--muted)">You're a premium user ✅</div>`;
+        } else {
+          html += `<div style="margin-top:8px; font-size:0.9rem; color:var(--muted)">Upgrade to premium for 3-day predictions & themes</div>`;
+        }
+
+        result.innerHTML = html;
+
       }, 8100);
     }
   </script>
