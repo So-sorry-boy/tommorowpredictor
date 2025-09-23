@@ -68,7 +68,17 @@
       --accent-dark: #ffb300;
       --banner-bg: linear-gradient(90deg,#b8860b,#ffd700,#f59e0b);
     }
+    /* Theme-specific card opacity adjustments */
+body.theme-light .card { background: rgba(255,255,255,0.97); }
+body.theme-neon .card { background: rgba(2,0,20,0.75); }
+body.theme-galaxy .card { background: rgba(10,10,30,0.92); }
+body.theme-royal .card { background: rgba(40,24,6,0.95); }
 
+/* Modal background opacity boost for clarity */
+body.theme-light .modal { background: rgba(255,255,255,0.97); }
+body.theme-neon .modal { background: rgba(2,0,20,0.92); }
+body.theme-galaxy .modal { background: rgba(10,10,30,0.95); }
+body.theme-royal .modal { background: rgba(40,24,6,0.97); }
     /* Base */
     * { box-sizing: border-box; }
     body {
@@ -252,16 +262,16 @@
   <!-- Modal -->
   <div id="modalOverlay" class="modal-overlay" aria-hidden="true">
     <div class="modal" role="dialog" aria-modal="true" aria-labelledby="modalTitle">
-      <h2 id="modalTitle">Premium Sarcasm Pack 😏</h2>
-      <p class="small-muted">Unlock a few completely necessary luxuries (in very serious English):</p>
-      <ul>
-        <li>Predict up to <strong>3 days ahead</strong> — because one day is for peasants.</li>
-        <li>Exclusive <strong>Galaxy Glow</strong> & <strong>Royal Gold</strong> themes — for that extraordinary look.</li>
-        <li>Custom fonts & subtle flex badge (display optional).</li>
-        <li>Priority sarcasm support — real humans learn to mock faster.</li>
-      </ul>
-      <p><strong>Price:</strong> ₹49.99 <span class="small-muted" style="margin-left:8px; text-decoration:line-through;">₹78,754 + 12% GST</span></p>
-      <p class="small-muted" id="modalDiscount">You get ~99.94% OFF. Congrats.</p>
+     <h2 id="modalTitle">Premium Access Package</h2>
+<p class="small-muted">Elevate your Tomorrow Day Predictor experience with our carefully curated premium features:</p>
+<ul>
+  <li>Predict up to <strong>3 days in advance</strong> with scientifically optimized accuracy.</li>
+  <li>Exclusive <strong>Galaxy Glow</strong> and <strong>Royal Gold</strong> themes for premium visual experience.</li>
+  <li>Advanced typography & custom font settings to match your style.</li>
+  <li>Priority support & insightful predictive analytics tailored for premium members.</li>
+</ul>
+<p><strong>Price:</strong> ₹49.99 <span class="small-muted" style="margin-left:8px; text-decoration:line-through;">₹78,754 + 12% GST</span></p>
+<p class="small-muted" id="modalDiscount">You receive ~99.94% discount today. Unlock your premium access instantly.</p>
       <div class="modal-actions">
         <button id="modalCancel" class="secondary">Close</button>
         <button id="modalBuy" class="promo-btn">Buy ₹49.99</button>
@@ -694,5 +704,74 @@
       }
     });
   </script>
+  <canvas id="cursorCanvas" style="position:fixed;top:0;left:0;width:100%;height:100%;pointer-events:none;z-index:50;"></canvas>
+<script>
+  const canvas = document.getElementById('cursorCanvas');
+  const ctx = canvas.getContext('2d');
+  let width = canvas.width = window.innerWidth;
+  let height = canvas.height = window.innerHeight;
+
+  window.addEventListener('resize', ()=>{
+    width = canvas.width = window.innerWidth;
+    height = canvas.height = window.innerHeight;
+  });
+
+  const particles = [];
+  const maxParticles = 80;
+
+  // Particle template
+  class Particle {
+    constructor(x,y,color,size){
+      this.x = x;
+      this.y = y;
+      this.vx = (Math.random()-0.5)*1.2;
+      this.vy = (Math.random()-0.5)*1.2;
+      this.size = size;
+      this.color = color;
+      this.life = 0;
+      this.maxLife = 60 + Math.random()*30;
+    }
+    update(){
+      this.x += this.vx;
+      this.y += this.vy;
+      this.life++;
+    }
+    draw(ctx){ ctx.fillStyle = this.color; ctx.beginPath(); ctx.arc(this.x,this.y,this.size,0,Math.PI*2); ctx.fill(); }
+  }
+
+  let cursor = {x:width/2,y:height/2};
+
+  window.addEventListener('mousemove', (e)=>{ cursor.x=e.clientX; cursor.y=e.clientY; });
+
+  function getThemeColors(){
+    if(document.body.classList.contains('theme-royal')) return ['#FFD700','#FFC700','#FFB300','#FFD54F'];
+    if(document.body.classList.contains('theme-galaxy')) return ['#7c5cff','#06b6d4','#3b82f6','#dbe9ff'];
+    if(document.body.classList.contains('theme-neon')) return ['#00ffd5','#0ea5e9','#00a3b5','#c0fff7'];
+    if(document.body.classList.contains('theme-light')) return ['#334155','#64748b','#94a3b8','#cbd5e1'];
+    return ['#ffffff'];
+  }
+
+  function animate(){
+    ctx.clearRect(0,0,width,height);
+
+    // create new particle at cursor
+    if(particles.length < maxParticles){
+      const colors = getThemeColors();
+      particles.push(new Particle(cursor.x + (Math.random()*10-5), cursor.y + (Math.random()*10-5), colors[Math.floor(Math.random()*colors.length)], 2 + Math.random()*2));
+    }
+
+    // update & draw
+    for(let i=particles.length-1;i>=0;i--){
+      const p = particles[i];
+      p.update();
+      p.draw(ctx);
+      if(p.life>p.maxLife) particles.splice(i,1);
+    }
+
+    requestAnimationFrame(animate);
+  }
+
+  animate();
+</script>
 </body>
 </html>
