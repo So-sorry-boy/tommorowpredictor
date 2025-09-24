@@ -1095,77 +1095,93 @@ const cursor = document.getElementById("cursor");
 const amount = 20;
 const sineDots = Math.floor(amount * 0.3);
 const width = 26;
-const idleTimeout = 150; // ms
-let mousePosition = {x: window.innerWidth/2, y: window.innerHeight/2};
+let mousePosition = { x: window.innerWidth / 2, y: window.innerHeight / 2 };
 let dots = [];
-let idle = false;
-let timeoutID;
 
 class Dot {
-  constructor(index=0){
-    this.index=index;
-    this.anglespeed=0.05;
-    this.x=0; this.y=0;
-    this.scale=1-0.05*index;
-    this.range = width/2 - width/2*this.scale + 2;
-    this.lockX=0; this.lockY=0;
-    this.angleX=0; this.angleY=0;
-    this.element=document.createElement("span");
-    gsap.set(this.element,{scale:this.scale});
-    cursor.appendChild(this.element);
-  }
-  lock(){
-    this.lockX=this.x;
-    this.lockY=this.y;
-    this.angleX=Math.random()*Math.PI*2;
-    this.angleY=Math.random()*Math.PI*2;
-  }
-  draw(){
-    if(!idle || this.index <= sineDots){
-      gsap.set(this.element,{x:this.x,y:this.y});
-    } else {
-      this.angleX += this.anglespeed;
-      this.angleY += this.anglespeed;
-      this.x = this.lockX + Math.sin(this.angleX)*this.range;
-      this.y = this.lockY + Math.sin(this.angleY)*this.range;
-      gsap.set(this.element,{x:this.x,y:this.y});
+    constructor(index = 0) {
+        this.index = index;
+        this.anglespeed = 0.05;
+        this.x = mousePosition.x;
+        this.y = mousePosition.y;
+        this.scale = 1 - 0.05 * index;
+        this.range = width / 2 - width / 2 * this.scale + 2;
+        this.limit = width * 0.75 * this.scale;
+        this.lockX = this.x;
+        this.lockY = this.y;
+        this.angleX = Math.random() * Math.PI * 2;
+        this.angleY = Math.random() * Math.PI * 2;
+
+        this.element = document.createElement("span");
+        TweenMax.set(this.element, { scale: this.scale });
+        cursor.appendChild(this.element);
     }
-  }
+
+    draw(idle) {
+        if (idle && this.index > sineDots) {
+            this.angleX += this.anglespeed;
+            this.angleY += this.anglespeed;
+            this.x = this.lockX + Math.sin(this.angleX) * this.range;
+            this.y = this.lockY + Math.sin(this.angleY) * this.range;
+        } else {
+            this.lockX = this.x;
+            this.lockY = this.y;
+        }
+        TweenMax.set(this.element, { x: this.x, y: this.y });
+    }
 }
 
-for(let i=0;i<amount;i++){ dots.push(new Dot(i)); }
+let idle = false;
+let timeoutID;
+const idleTimeout = 150;
 
-window.addEventListener("mousemove", e=>{
-  mousePosition.x=e.clientX-width/2;
-  mousePosition.y=e.clientY-width/2;
-  resetIdleTimer();
-});
-
-window.addEventListener("touchmove", e=>{
-  mousePosition.x=e.touches[0].clientX-width/2;
-  mousePosition.y=e.touches[0].clientY-width/2;
-  resetIdleTimer();
-});
-
-function startIdleTimer(){ timeoutID=setTimeout(goInactive,idleTimeout); idle=false; }
-function resetIdleTimer(){ clearTimeout(timeoutID); startIdleTimer(); }
-function goInactive(){ idle=true; for(let dot of dots){ dot.lock(); } }
-
-function render(){
-  let x=mousePosition.x, y=mousePosition.y;
-  dots.forEach((dot,i,d)=>{
-    let n=d[i+1]||d[0];
-    dot.x=x; dot.y=y;
-    dot.draw();
-    if(!idle || i<=sineDots){
-      const dx=(n.x-dot.x)*0.35, dy=(n.y-dot.y)*0.35;
-      x+=dx; y+=dy;
-    }
-  });
-  requestAnimationFrame(render);
+function startIdleTimer() {
+    clearTimeout(timeoutID);
+    timeoutID = setTimeout(() => (idle = true), idleTimeout);
+    idle = false;
 }
+
+function onMove(x, y) {
+    mousePosition.x = x - width / 2;
+    mousePosition.y = y - width / 2;
+    startIdleTimer();
+    idle = false;
+}
+
+function buildDots() {
+    for (let i = 0; i < amount; i++) {
+        dots.push(new Dot(i));
+    }
+}
+
+function render() {
+    let x = mousePosition.x;
+    let y = mousePosition.y;
+
+    dots.forEach((dot, index) => {
+        let nextDot = dots[index + 1] || dots[0];
+        dot.x = x;
+        dot.y = y;
+        dot.draw(idle);
+
+        const dx = (nextDot.x - dot.x) * 0.35;
+        const dy = (nextDot.y - dot.y) * 0.35;
+        x += dx;
+        y += dy;
+    });
+
+    requestAnimationFrame(render);
+}
+
+// Event listeners
+window.addEventListener("mousemove", e => onMove(e.clientX, e.clientY));
+window.addEventListener("touchmove", e => {
+    onMove(e.touches[0].clientX, e.touches[0].clientY);
+});
+
+buildDots();
 render();
-  if (!timeoutID) startIdleTimer(); // 👈 start idle timer if not running
+startIdleTimer();
 </script>
 
 </body>
