@@ -248,11 +248,14 @@ body.theme-royal .modal { background: rgba(40,24,6,0.97); }
 
 .Cursor span {
   position: absolute;
-  width: 26px; height: 26px;
+  width: 26px;
+  height: 26px;
   border-radius: 50%;
-  background: white;            /* white cursor = invert ke liye base */
+  background: red !important; /* test color */
   transform: translate(-50%, -50%);
+  mix-blend-mode: normal !important; /* disable blending test */
 }
+
 </style>
 </head>
 <body>
