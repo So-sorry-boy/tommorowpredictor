@@ -238,19 +238,20 @@ body.theme-royal .modal { background: rgba(40,24,6,0.97); }
   <style>html, body { cursor: none; }
 
 .Cursor {
+  z-index: 9999;
   pointer-events: none;
   position: fixed;
   top: 0; left: 0;
-  z-index: 1000;
   filter: url("#goo");
+  mix-blend-mode: difference; /* 👈 put here */
 }
+
 .Cursor span {
   position: absolute;
   width: 26px; height: 26px;
   border-radius: 50%;
-  background: white;
+  background: #e0dad5;            /* white cursor = invert ke liye base */
   transform: translate(-50%, -50%);
-  mix-blend-mode: difference;
 }
 </style>
 </head>
