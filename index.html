@@ -250,7 +250,7 @@ body.theme-royal .modal { background: rgba(40,24,6,0.97); }
   position: absolute;
   width: 26px; height: 26px;
   border-radius: 50%;
-  background: #e0dad5;            /* white cursor = invert ke liye base */
+  background: white;            /* white cursor = invert ke liye base */
   transform: translate(-50%, -50%);
 }
 </style>
@@ -1096,7 +1096,7 @@ const amount = 20;
 const sineDots = Math.floor(amount * 0.3);
 const width = 26;
 const idleTimeout = 150; // ms
-let mousePosition = {x:0, y:0};
+let mousePosition = {x: window.innerWidth/2, y: window.innerHeight/2};
 let dots = [];
 let idle = false;
 let timeoutID;
